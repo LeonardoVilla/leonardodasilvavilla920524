@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/services/api";
-import { Pet } from "@/types/api";
 
 export default function Home() {
-  // 👇 AQUI FICA
-  const [pets, setPets] = useState<Pet[]>([]);
+  const [pets, setPets] = useState<any[]>([]);
 
   useEffect(() => {
     apiFetch("/pets")
@@ -17,12 +15,9 @@ export default function Home() {
   return (
     <div>
       <h1>Pets</h1>
-
       <ul>
         {pets.map((pet) => (
-          <li key={pet.id}>
-            {pet.nome} - {pet.idade} anos
-          </li>
+          <li key={pet.id}>{pet.nome}</li>
         ))}
       </ul>
     </div>
