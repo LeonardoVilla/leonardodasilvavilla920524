@@ -44,10 +44,10 @@ export default function LoginPage() {
             Email
           </label>
           <input
-            type="email"
+            type="text"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            placeholder="seu@email.com"
+            placeholder="Usuário"
             className="w-full rounded-lg border border-gray-300 px-4 py-2
                        focus:outline-none focus:ring-2 focus:ring-blue-500
                        focus:border-blue-500"
