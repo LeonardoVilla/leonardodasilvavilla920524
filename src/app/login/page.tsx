@@ -1,25 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { apiFetch } from "@/services/api";
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
-export default function Home() {
-  const [pets, setPets] = useState<any[]>([]);
+export default function LoginPage() {
+  const { login } = useAuth();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    apiFetch("/pets")
-      .then(setPets)
-      .catch(console.error);
-  }, []);
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    await login(username, password);
+    window.location.href = "/";
+  }
 
   return (
-    <div>
-      <h1>Pets</h1>
-      <ul>
-        {pets.map((pet) => (
-          <li key={pet.id}>{pet.nome}</li>
-        ))}
-      </ul>
-    </div>
+    <form onSubmit={handleLogin}>
+      <h1>Login</h1>
+
+      <input
+        placeholder="Usuário"
+        value={username}
+        onChange={e => setUsername(e.target.value)}
+      />
+
+      <input
+        type="password"
+        placeholder="Senha"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+      />
+
+      <button type="submit">Entrar</button>
+    </form>
   );
 }

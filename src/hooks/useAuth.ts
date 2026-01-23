@@ -1,14 +1,8 @@
-import { apiFetch } from "@/services/api";
+import { login, logout } from "@/services/auth";
 
 export function useAuth() {
-  async function refreshToken() {
-    const data = await apiFetch("/autenticacao/refresh", {
-      method: "PUT",
-    });
-
-    localStorage.setItem("token", data.token);
-    return data;
-  }
-
-  return { refreshToken };
+  return {
+    login,
+    logout,
+  };
 }

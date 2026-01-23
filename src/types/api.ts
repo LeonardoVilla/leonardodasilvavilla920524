@@ -1,7 +1,4 @@
 export interface Pet {
-  id: string;
+  id: number;
   nome: string;
-  idade: number;
 }
-
-const [pets, setPets] = useState<Pet[]>([]);

@@ -2,27 +2,28 @@
 
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/services/api";
-import { Pet } from "@/types/api";
 
 export default function Home() {
-  // 👇 AQUI FICA
-  const [pets, setPets] = useState<Pet[]>([]);
+  const [pets, setPets] = useState<any[]>([]);
 
   useEffect(() => {
-    apiFetch("/pets")
-      .then(setPets)
+    apiFetch("/v1/pets")
+      .then(data => {
+        if (Array.isArray(data.content)) {
+          setPets(data.content); // ✅ array garantido
+        } else {
+          setPets([]); // segurança
+        }
+      })
       .catch(console.error);
   }, []);
 
   return (
     <div>
       <h1>Pets</h1>
-
       <ul>
-        {pets.map((pet) => (
-          <li key={pet.id}>
-            {pet.nome} - {pet.idade} anos
-          </li>
+        {pets.map(pet => (
+          <li key={pet.id}>{pet.nome}</li>
         ))}
       </ul>
     </div>
