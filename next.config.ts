@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  /**
+   * Keep future-proof defaults here. Add image/domain config or
+   * other optimizations as project needs grow.
+   */
 };
 
 export default nextConfig;
