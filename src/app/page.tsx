@@ -28,7 +28,7 @@ export default function Home() {
 
       // 2️⃣ Busca os pets
       try {
-        const data = await apiFetch<Paginated<Pet>>("/v1/pets");
+        const data = await apiFetch<Paginated<Pet>>("/pets");
         setPets(Array.isArray(data.content) ? data.content : []);
       } catch {
         setError("Não foi possível carregar os dados agora. Tente novamente.");

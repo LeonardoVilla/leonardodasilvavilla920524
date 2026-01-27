@@ -1,6 +1,8 @@
-import { apiFetch } from "./api";
-import { LoginResponse } from "@/types/api";
+import { apiFetch, ApiError } from "./api";
+import { AuthResponseDto } from "@/types/api";
 import { storage } from "./storage";
+
+export type LoginResponse = AuthResponseDto;
 
 export async function login(
   username: string,
@@ -23,7 +25,33 @@ export async function login(
   return data;
 }
 
+export async function refreshToken(): Promise<LoginResponse> {
+  const refreshToken = storage.getRefreshToken();
+
+  if (!refreshToken) {
+    throw new ApiError("Refresh token not available", 401);
+  }
+
+  const data = await apiFetch<LoginResponse>("/autenticacao/refresh", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${refreshToken}`,
+    },
+  });
+
+  if (data.access_token) {
+    storage.setToken(String(data.access_token));
+  }
+
+  if (data.refresh_token) {
+    storage.setRefreshToken(String(data.refresh_token));
+  }
+
+  return data;
+}
+
 export function logout() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
+  storage.removeToken();
+  storage.removeRefreshToken();
 }

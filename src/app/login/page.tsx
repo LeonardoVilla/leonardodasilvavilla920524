@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { login } from "@/services/auth";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +19,7 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      await login(email, senha);
+      await login(username, password);
       router.replace("/");
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -42,15 +42,15 @@ export default function LoginPage() {
           Acessar sistema
         </h1>
 
-        {/* Email */}
+        {/* Usuário */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email
+            Usuário
           </label>
           <input
             type="text"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            value={username}
+            onChange={e => setUsername(e.target.value)}
             placeholder="Usuário"
             className="w-full rounded-lg border border-gray-300 px-4 py-2
                        focus:outline-none focus:ring-2 focus:ring-blue-500
@@ -66,8 +66,8 @@ export default function LoginPage() {
           </label>
           <input
             type="password"
-            value={senha}
-            onChange={e => setSenha(e.target.value)}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
             placeholder="••••••••"
             className="w-full rounded-lg border border-gray-300 px-4 py-2
                        focus:outline-none focus:ring-2 focus:ring-blue-500

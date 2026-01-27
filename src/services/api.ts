@@ -22,7 +22,12 @@ export async function apiFetch<T = unknown>(
       headers.set("Authorization", `Bearer ${token}`);
     }
 
-    const response = await fetch(`${base}${endpoint}`, { ...options, headers });
+    // Remove leading slash from endpoint if base ends with slash
+    const cleanEndpoint = base.endsWith("/") && endpoint.startsWith("/")
+      ? endpoint.slice(1)
+      : endpoint;
+
+    const response = await fetch(`${base}${cleanEndpoint}`, { ...options, headers });
 
     if (!response.ok) {
       throw new ApiError(
@@ -37,9 +42,13 @@ export async function apiFetch<T = unknown>(
       // If response is not JSON, surface a generic error
       throw new ApiError("Invalid JSON response from server", response.status);
     }
-  } catch {
-    // 🔇 evita erro feio no console do usuário
-    console.warn("Erro de comunicação com a API");
+  } catch (error) {
+    // Se for um ApiError, relança com sua mensagem original
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    // Para outros erros, loga e mostra mensagem genérica
+    console.error("Erro de comunicação com a API:", error);
     throw new ApiError(
       "Servidor indisponível. Tente novamente mais tarde."
     );
