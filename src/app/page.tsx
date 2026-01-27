@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { apiFetch } from "@/services/api";
 import { PetResponseDto, PagedPetResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
@@ -79,11 +80,17 @@ export default function Home() {
 
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">🐾 Pets</h1>
             <p className="text-gray-600 text-sm mt-1">Listagem completa de todos os pets do sistema</p>
           </div>
+          <Link
+            href="/pets/novo"
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+          >
+            + Novo Pet
+          </Link>
         </div>
       </div>
 
@@ -125,8 +132,9 @@ export default function Home() {
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {pets.map((pet) => (
-                <div
+                <Link
                   key={pet.id}
+                  href={`/pets/${pet.id}`}
                   className="bg-white rounded-lg shadow-md hover:shadow-lg transition overflow-hidden cursor-pointer group"
                 >
                   {/* Pet Image */}
@@ -166,11 +174,11 @@ export default function Home() {
                     </div>
 
                     {/* Action Button */}
-                    <button className="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    <div className="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center font-medium">
                       Ver detalhes
-                    </button>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
 
