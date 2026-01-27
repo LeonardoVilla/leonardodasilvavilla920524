@@ -236,7 +236,7 @@ export default function PetDetailPage() {
         {!isNew && (
           <div className="mt-8">
             <Link
-              href="/pets"
+              href="/"
               className="text-blue-600 hover:underline font-medium"
             >
               ← Voltar para pets
