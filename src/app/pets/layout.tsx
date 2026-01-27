@@ -19,7 +19,7 @@ export default function PetsLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   return (
     <Suspense fallback={<div>Carregando...</div>}>
