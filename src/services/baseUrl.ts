@@ -1,1 +1,1 @@
-export const BASE_URL = "https://pet-manager-api.geia.vip";
+export const BASE_URL = "http://localhost:3001";
