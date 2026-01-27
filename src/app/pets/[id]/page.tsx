@@ -94,7 +94,7 @@ export default function PetDetailPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <Link href="/pets" className="text-blue-600 hover:underline">
+          <Link href="/" className="text-blue-600 hover:underline">
             Voltar para pets
           </Link>
         </div>
