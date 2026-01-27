@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { apiFetch } from "@/services/api";
 import { ProprietarioResponseDto, PagedProprietarioResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
@@ -67,11 +68,17 @@ export default function TutoresPage() {
 
             {/* Header */}
             <div className="bg-white shadow-sm border-b">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900">👤 Tutores</h1>
                         <p className="text-gray-600 text-sm mt-1">Listagem completa de todos os tutores do sistema</p>
                     </div>
+                    <Link
+                        href="/tutores/novo"
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                    >
+                        + Novo Tutor
+                    </Link>
                 </div>
             </div>
 
@@ -160,9 +167,12 @@ export default function TutoresPage() {
                                                     {tutor.endereco || "-"}
                                                 </td>
                                                 <td className="px-6 py-4 text-center">
-                                                    <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                                                    <Link
+                                                        href={`/tutores/${tutor.id}`}
+                                                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                                                    >
                                                         Ver detalhes
-                                                    </button>
+                                                    </Link>
                                                 </td>
                                             </tr>
                                         ))}
