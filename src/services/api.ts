@@ -36,8 +36,13 @@ export async function apiFetch<T = unknown>(
       );
     }
 
+    const rawText = await response.text();
+    if (!rawText) {
+      return undefined as T;
+    }
+
     try {
-      return (await response.json()) as T;
+      return JSON.parse(rawText) as T;
     } catch {
       // If response is not JSON, surface a generic error
       throw new ApiError("Invalid JSON response from server", response.status);
