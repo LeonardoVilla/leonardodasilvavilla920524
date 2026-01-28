@@ -64,20 +64,10 @@ export async function addPetPhoto(
     const formData = new FormData();
     formData.append("foto", file);
 
-    // Need custom fetch to avoid setting Content-Type header for FormData
-    const response = await fetch(`/v1/pets/${petId}/fotos`, {
+    return apiFetch<AnexoResponseDto>(`/v1/pets/${petId}/fotos`, {
         method: "POST",
         body: formData,
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
     });
-
-    if (!response.ok) {
-        throw new Error("Falha ao fazer upload da foto do pet");
-    }
-
-    return response.json();
 }
 
 export async function deletePetPhoto(
