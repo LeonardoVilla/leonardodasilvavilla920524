@@ -22,13 +22,13 @@ export function Navbar() {
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <div className="flex-shrink-0">
-                        <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-blue-600">
+                        <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-[#2FA5A4]">
                             <Image
-                                src="/icone-de-cao-e-gato.jpg"
+                                src="/icone-de-cao-e-gato.png"
                                 alt="PetManager"
-                                width={30}
-                                height={30}
-                                className="h-6 w-6"
+                                width={68}
+                                height={68}
+                                className="h-18 w-18"
                                 priority
                             />
                             PetManager
@@ -40,7 +40,7 @@ export function Navbar() {
                         <Link
                             href="/"
                             className={`px-4 py-2 rounded-lg transition ${isActive("/")
-                                ? "bg-blue-600 text-white"
+                                ? "bg-[#2FA5A4] text-white"
                                 : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >
@@ -50,7 +50,7 @@ export function Navbar() {
                         <Link
                             href="/tutores"
                             className={`px-4 py-2 rounded-lg transition ${isActive("/tutores")
-                                ? "bg-blue-600 text-white"
+                                ? "bg-[#2FA5A4] text-white"
                                 : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >

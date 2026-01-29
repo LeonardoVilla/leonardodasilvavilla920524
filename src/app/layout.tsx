@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   icons: {
-    icon: "/icone-de-cao-e-gato.avif",
+    icon: "/icone-de-cao-e-gato.png",
   },
 };
 
