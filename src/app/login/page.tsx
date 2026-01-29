@@ -54,8 +54,8 @@ export default function LoginPage() {
             placeholder="Usuário: admin"
             className="w-full rounded-lg border border-gray-300 px-4 py-2
                        placeholder:text-gray-500
-                       focus:outline-none focus:ring-2 focus:ring-blue-500
-                       focus:border-blue-500"
+                       focus:outline-none focus:ring-2 focus:ring-[#2FA5A4]
+                       focus:border-[#2FA5A4]"
             required
           />
         </div>
@@ -72,8 +72,8 @@ export default function LoginPage() {
             placeholder="senha: admin"
             className="w-full rounded-lg border border-gray-300 px-4 py-2
                         placeholder:text-gray-500
-                       focus:outline-none focus:ring-2 focus:ring-blue-500
-                       focus:border-blue-500"
+                       focus:outline-none focus:ring-2 focus:ring-[#2FA5A4]
+                       focus:border-[#2FA5A4]"
             required
           />
         </div>
@@ -89,8 +89,8 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-blue-600 text-white py-2 font-medium
-                     hover:bg-blue-700 transition
+          className="w-full rounded-lg bg-[#2FA5A4] text-white py-2 font-medium
+                     hover:bg-[#2FA5A4] transition
                      disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? "Entrando..." : "Entrar"}

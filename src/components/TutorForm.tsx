@@ -96,8 +96,8 @@ export function TutorForm({ onSubmit, initialData, loading, error }: TutorFormPr
           onChange={handleChange}
           placeholder="João da Silva"
           className="w-full px-4 py-2 border border-gray-300 rounded-lg
-                     focus:outline-none focus:ring-2 focus:ring-blue-500
-                     focus:border-blue-500"
+                     focus:outline-none focus:ring-2 focus:ring-[#2FA5A4]
+                     focus:border-[#2FA5A4]"
           required
         />
       </div>
@@ -114,8 +114,8 @@ export function TutorForm({ onSubmit, initialData, loading, error }: TutorFormPr
           onChange={handleChange}
           placeholder="joao@email.com"
           className="w-full px-4 py-2 border border-gray-300 rounded-lg
-                     focus:outline-none focus:ring-2 focus:ring-blue-500
-                     focus:border-blue-500"
+                     focus:outline-none focus:ring-2 focus:ring-[#2FA5A4]
+                     focus:border-[#2FA5A4]"
         />
       </div>
 
@@ -131,8 +131,8 @@ export function TutorForm({ onSubmit, initialData, loading, error }: TutorFormPr
           onChange={handleChange}
           placeholder="(11) 91234-5678"
           className="w-full px-4 py-2 border border-gray-300 rounded-lg
-                     focus:outline-none focus:ring-2 focus:ring-blue-500
-                     focus:border-blue-500"
+                     focus:outline-none focus:ring-2 focus:ring-[#2FA5A4]
+                     focus:border-[#2FA5A4]"
           required
         />
       </div>
@@ -149,8 +149,8 @@ export function TutorForm({ onSubmit, initialData, loading, error }: TutorFormPr
           onChange={handleChange}
           placeholder="000.000.000-00"
           className="w-full px-4 py-2 border border-gray-300 rounded-lg
-                     focus:outline-none focus:ring-2 focus:ring-blue-500
-                     focus:border-blue-500"
+                     focus:outline-none focus:ring-2 focus:ring-[#2FA5A4]
+                     focus:border-[#2FA5A4]"
         />
       </div>
 
@@ -166,8 +166,8 @@ export function TutorForm({ onSubmit, initialData, loading, error }: TutorFormPr
           placeholder="Rua das Flores, 123, Bairro Centro, São Paulo - SP"
           rows={3}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg
-                     focus:outline-none focus:ring-2 focus:ring-blue-500
-                     focus:border-blue-500"
+                     focus:outline-none focus:ring-2 focus:ring-[#2FA5A4]
+                     focus:border-[#2FA5A4]"
         />
       </div>
 
@@ -182,8 +182,8 @@ export function TutorForm({ onSubmit, initialData, loading, error }: TutorFormPr
       <button
         type="submit"
         disabled={isSubmitting || loading}
-        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg
-                   hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
+        className="w-full px-4 py-2 bg-[#2FA5A4] text-white rounded-lg
+                   hover:bg-[#2FA5A4] disabled:opacity-50 disabled:cursor-not-allowed
                    transition font-medium"
       >
         {isSubmitting || loading ? "Salvando..." : "Salvar Tutor"}

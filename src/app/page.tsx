@@ -66,7 +66,7 @@ export default function Home() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2FA5A4] mx-auto mb-4"></div>
           <p className="text-gray-600">Carregando pets...</p>
         </div>
       </div>
@@ -108,8 +108,8 @@ export default function Home() {
                 setPage(0);
               }}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg
-                         focus:outline-none focus:ring-2 focus:ring-blue-500
-                         focus:border-blue-500"
+                         focus:outline-none focus:ring-2 focus:ring-[#2FA5A4]
+                         focus:border-[#2FA5A4]"
             />
           </div>
         </div>
@@ -138,7 +138,7 @@ export default function Home() {
                   className="bg-white rounded-lg shadow-md hover:shadow-lg transition overflow-hidden cursor-pointer group"
                 >
                   {/* Pet Image */}
-                  <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center overflow-hidden relative">
+                  <div className="h-48 bg-gradient-to-br from-[#2FA5A4] to-[#2FA5A4] flex items-center justify-center overflow-hidden relative">
                     {pet.foto?.url ? (
                       <img
                         src={pet.foto.url}
@@ -174,7 +174,7 @@ export default function Home() {
                     </div>
 
                     {/* Action Button */}
-                    <div className="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center font-medium">
+                    <div className="mt-4 w-full px-4 py-2 bg-[#2FA5A4] text-white rounded-lg hover:bg-[#2FA5A4] transition text-center font-medium">
                       Ver detalhes
                     </div>
                   </div>
@@ -202,7 +202,7 @@ export default function Home() {
                         key={pageNum}
                         onClick={() => setPage(pageNum)}
                         className={`px-3 py-2 rounded-lg transition ${pageNum === page
-                            ? "bg-blue-600 text-white"
+                          ? "bg-[#2FA5A4] text-white"
                             : "border border-gray-300 hover:bg-gray-100"
                           }`}
                       >
