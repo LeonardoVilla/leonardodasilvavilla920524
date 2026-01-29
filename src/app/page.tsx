@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { apiFetch } from "@/services/api";
 import { PetResponseDto, PagedPetResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
@@ -82,7 +83,18 @@ export default function Home() {
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">🐾 Pets</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              <span className="inline-flex items-center gap-2">
+                <Image
+                  src="/icone-de-cao-e-gato-menu.png"
+                  alt="Pets"
+                  width={28}
+                  height={28}
+                  className="h-7 w-7"
+                />
+                Pets
+              </span>
+            </h1>
             <p className="text-gray-600 text-sm mt-1">Listagem completa de todos os pets do sistema</p>
           </div>
           <Link
@@ -203,7 +215,7 @@ export default function Home() {
                         onClick={() => setPage(pageNum)}
                         className={`px-3 py-2 rounded-lg transition ${pageNum === page
                           ? "bg-[#2FA5A4] text-white"
-                            : "border border-gray-300 hover:bg-gray-100"
+                          : "border border-gray-300 hover:bg-gray-100"
                           }`}
                       >
                         {pageNum + 1}

@@ -44,7 +44,16 @@ export function Navbar() {
                                 : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >
-                            🐾 Pets
+                            <span className="inline-flex items-center gap-2">
+                                <Image
+                                    src="/icone-de-cao-e-gato-menu.png"
+                                    alt="Pets"
+                                    width={20}
+                                    height={20}
+                                    className="h-5 w-5"
+                                />
+                                Pets
+                            </span>
                         </Link>
 
                         <Link
@@ -54,7 +63,16 @@ export function Navbar() {
                                 : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >
-                            👤 Tutores
+                            <span className="inline-flex items-center gap-2">
+                                <Image
+                                    src="/icone-de-tutor-menu.png"
+                                    alt="Tutores"
+                                    width={20}
+                                    height={20}
+                                    className="h-5 w-5"
+                                />
+                                Tutores
+                            </span>
                         </Link>
                     </nav>
 
@@ -66,10 +84,28 @@ export function Navbar() {
                             </summary>
                             <ul className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                                 <li>
-                                    <Link href="/">🐾 Pets</Link>
+                                    <Link href="/" className="flex items-center gap-2">
+                                        <Image
+                                            src="/icone-de-cao-e-gato-menu.png"
+                                            alt="Pets"
+                                            width={20}
+                                            height={20}
+                                            className="h-5 w-5"
+                                        />
+                                        Pets
+                                    </Link>
                                 </li>
                                 <li>
-                                    <Link href="/tutores">👤 Tutores</Link>
+                                    <Link href="/tutores" className="flex items-center gap-2">
+                                        <Image
+                                            src="/icone-de-tutor-menu.png"
+                                            alt="Tutores"
+                                            width={20}
+                                            height={20}
+                                            className="h-5 w-5"
+                                        />
+                                        Tutores
+                                    </Link>
                                 </li>
                             </ul>
                         </details>
