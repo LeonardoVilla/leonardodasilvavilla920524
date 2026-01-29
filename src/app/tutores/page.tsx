@@ -54,7 +54,7 @@ export default function TutoresPage() {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2FA5A4] mx-auto mb-4"></div>
                     <p className="text-gray-600">Carregando tutores...</p>
                 </div>
             </div>
@@ -96,8 +96,8 @@ export default function TutoresPage() {
                                 setPage(0);
                             }}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg
-                         focus:outline-none focus:ring-2 focus:ring-blue-500
-                         focus:border-blue-500"
+                         focus:outline-none focus:ring-2 focus:ring-[#2FA5A4]
+                         focus:border-[#2FA5A4]"
                         />
                     </div>
                 </div>
@@ -149,7 +149,7 @@ export default function TutoresPage() {
                                             >
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">
+                                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#2FA5A4] to-[#2FA5A4] flex items-center justify-center text-white font-bold">
                                                             {tutor.nome?.charAt(0).toUpperCase() || "?"}
                                                         </div>
                                                         <span className="font-medium text-gray-900">
@@ -169,7 +169,7 @@ export default function TutoresPage() {
                                                 <td className="px-6 py-4 text-center">
                                                     <Link
                                                         href={`/tutores/${tutor.id}`}
-                                                        className="inline-flex items-center px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition whitespace-nowrap"
+                                                        className="inline-flex items-center px-4 py-2 text-sm bg-[#2FA5A4] text-white rounded-lg hover:bg-[#2FA5A4] transition whitespace-nowrap"
                                                     >
                                                         Ver detalhes
                                                     </Link>
@@ -201,7 +201,7 @@ export default function TutoresPage() {
                                                 key={pageNum}
                                                 onClick={() => setPage(pageNum)}
                                                 className={`px-3 py-2 rounded-lg transition ${pageNum === page
-                                                    ? "bg-blue-600 text-white"
+                                                    ? "bg-[#2FA5A4] text-white"
                                                     : "border border-gray-300 hover:bg-gray-100"
                                                     }`}
                                             >

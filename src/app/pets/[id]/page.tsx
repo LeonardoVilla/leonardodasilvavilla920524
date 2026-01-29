@@ -82,7 +82,7 @@ export default function PetDetailPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2FA5A4] mx-auto mb-4"></div>
           <p className="text-gray-600">Carregando...</p>
         </div>
       </div>
@@ -94,7 +94,7 @@ export default function PetDetailPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <Link href="/" className="text-blue-600 hover:underline">
+          <Link href="/" className="text-[#2FA5A4] hover:underline">
             Voltar para pets
           </Link>
         </div>
@@ -123,7 +123,7 @@ export default function PetDetailPage() {
             {!editing && pet && (
               <button
                 onClick={() => setEditing(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-4 py-2 bg-[#2FA5A4] text-white rounded-lg hover:bg-[#2FA5A4]"
               >
                 Editar
               </button>
@@ -137,7 +137,7 @@ export default function PetDetailPage() {
           {/* Foto */}
           <div className="md:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="aspect-square rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-6xl mb-4 overflow-hidden">
+              <div className="aspect-square rounded-lg bg-gradient-to-br from-[#2FA5A4] to-[#2FA5A4] flex items-center justify-center text-6xl mb-4 overflow-hidden">
                 {pet?.foto?.url ? (
                   <img
                     src={pet.foto.url}
@@ -158,7 +158,7 @@ export default function PetDetailPage() {
                     disabled={uploading}
                     className="hidden"
                   />
-                  <div className="cursor-pointer px-4 py-2 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 text-center font-medium">
+                  <div className="cursor-pointer px-4 py-2 border-2 border-[#2FA5A4] text-[#2FA5A4] rounded-lg hover:bg-[#2FA5A4]/10 text-center font-medium">
                     {uploading ? "Enviando..." : "Alterar foto"}
                   </div>
                 </label>
@@ -212,7 +212,7 @@ export default function PetDetailPage() {
                           <Link
                             key={tutor.id}
                             href={`/tutores/${tutor.id}`}
-                            className="block p-3 border rounded-lg hover:bg-blue-50 transition"
+                            className="block p-3 border rounded-lg hover:bg-[#2FA5A4]/10 transition"
                           >
                             <p className="font-medium text-gray-900">
                               {tutor.nome}
@@ -237,7 +237,7 @@ export default function PetDetailPage() {
           <div className="mt-8">
             <Link
               href="/"
-              className="text-blue-600 hover:underline font-medium"
+              className="text-[#2FA5A4] hover:underline font-medium"
             >
               ← Voltar para pets
             </Link>
