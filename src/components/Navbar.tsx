@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { logout } from "@/services/auth";
@@ -21,8 +22,16 @@ export function Navbar() {
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <div className="flex-shrink-0">
-                        <Link href="/" className="text-2xl font-bold text-blue-600">
-                            🐾 PetManager
+                        <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-blue-600">
+                            <Image
+                                src="/icone-de-cao-e-gato.avif"
+                                alt="PetManager"
+                                width={24}
+                                height={24}
+                                className="h-6 w-6"
+                                priority
+                            />
+                            PetManager
                         </Link>
                     </div>
 
@@ -31,8 +40,8 @@ export function Navbar() {
                         <Link
                             href="/"
                             className={`px-4 py-2 rounded-lg transition ${isActive("/")
-                                    ? "bg-blue-600 text-white"
-                                    : "text-gray-700 hover:bg-gray-100"
+                                ? "bg-blue-600 text-white"
+                                : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >
                             🐾 Pets
@@ -41,8 +50,8 @@ export function Navbar() {
                         <Link
                             href="/tutores"
                             className={`px-4 py-2 rounded-lg transition ${isActive("/tutores")
-                                    ? "bg-blue-600 text-white"
-                                    : "text-gray-700 hover:bg-gray-100"
+                                ? "bg-blue-600 text-white"
+                                : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >
                             👤 Tutores
