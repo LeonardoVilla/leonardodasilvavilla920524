@@ -158,7 +158,15 @@ export default function Home() {
                         className="w-full h-full object-cover group-hover:scale-105 transition"
                       />
                     ) : (
-                      <span className="text-6xl">🐾</span>
+                      <div className="relative w-[60%] h-[60%]">
+                        <Image
+                          src="/pet-ausente.png"
+                          alt="Pet ausente"
+                          fill
+                          className="object-contain"
+                          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                        />
+                      </div>
                     )}
                   </div>
 
