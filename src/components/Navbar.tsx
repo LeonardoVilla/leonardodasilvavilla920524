@@ -24,10 +24,10 @@ export function Navbar() {
                     <div className="flex-shrink-0">
                         <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-blue-600">
                             <Image
-                                src="/icone-de-cao-e-gato.avif"
+                                src="/icone-de-cao-e-gato.jpg"
                                 alt="PetManager"
-                                width={24}
-                                height={24}
+                                width={30}
+                                height={30}
                                 className="h-6 w-6"
                                 priority
                             />
