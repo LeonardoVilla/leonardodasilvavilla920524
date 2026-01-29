@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { apiFetch } from "@/services/api";
 import { ProprietarioResponseDto, PagedProprietarioResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
@@ -70,7 +71,18 @@ export default function TutoresPage() {
             <div className="bg-white shadow-sm border-b">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">👤 Tutores</h1>
+                        <h1 className="text-3xl font-bold text-gray-900">
+                            <span className="inline-flex items-center gap-2">
+                                <Image
+                                    src="/icone-de-tutor-menu.png"
+                                    alt="Tutores"
+                                    width={28}
+                                    height={28}
+                                    className="h-7 w-7"
+                                />
+                                Tutores
+                            </span>
+                        </h1>
                         <p className="text-gray-600 text-sm mt-1">Listagem completa de todos os tutores do sistema</p>
                     </div>
                     <Link
