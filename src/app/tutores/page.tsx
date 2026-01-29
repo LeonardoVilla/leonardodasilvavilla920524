@@ -169,7 +169,7 @@ export default function TutoresPage() {
                                                 <td className="px-6 py-4 text-center">
                                                     <Link
                                                         href={`/tutores/${tutor.id}`}
-                                                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                                                        className="inline-flex items-center px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition whitespace-nowrap"
                                                     >
                                                         Ver detalhes
                                                     </Link>
@@ -201,8 +201,8 @@ export default function TutoresPage() {
                                                 key={pageNum}
                                                 onClick={() => setPage(pageNum)}
                                                 className={`px-3 py-2 rounded-lg transition ${pageNum === page
-                                                        ? "bg-blue-600 text-white"
-                                                        : "border border-gray-300 hover:bg-gray-100"
+                                                    ? "bg-blue-600 text-white"
+                                                    : "border border-gray-300 hover:bg-gray-100"
                                                     }`}
                                             >
                                                 {pageNum + 1}
