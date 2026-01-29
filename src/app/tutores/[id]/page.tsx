@@ -121,7 +121,7 @@ export default function TutorDetailPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2FA5A4] mx-auto mb-4"></div>
           <p className="text-gray-600">Carregando...</p>
         </div>
       </div>
@@ -133,7 +133,7 @@ export default function TutorDetailPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <Link href="/tutores" className="text-blue-600 hover:underline">
+          <Link href="/tutores" className="text-[#2FA5A4] hover:underline">
             Voltar para tutores
           </Link>
         </div>
@@ -163,7 +163,7 @@ export default function TutorDetailPage() {
             {!editing && tutor && (
               <button
                 onClick={() => setEditing(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-4 py-2 bg-[#2FA5A4] text-white rounded-lg hover:bg-[#2FA5A4]"
               >
                 Editar
               </button>
@@ -198,7 +198,7 @@ export default function TutorDetailPage() {
                     disabled={uploading}
                     className="hidden"
                   />
-                  <div className="cursor-pointer px-4 py-2 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 text-center font-medium">
+                  <div className="cursor-pointer px-4 py-2 border-2 border-[#2FA5A4] text-[#2FA5A4] rounded-lg hover:bg-[#2FA5A4]/10 text-center font-medium">
                     {uploading ? "Enviando..." : "Alterar foto"}
                   </div>
                 </label>
@@ -286,7 +286,7 @@ export default function TutorDetailPage() {
                           >
                             <Link
                               href={`/pets/${pet.id}`}
-                              className="flex-1 text-blue-600 hover:underline"
+                              className="flex-1 text-[#2FA5A4] hover:underline"
                             >
                               <p className="font-medium">{pet.nome}</p>
                               {pet.raca && (
@@ -326,7 +326,7 @@ export default function TutorDetailPage() {
                     <button
                       key={pet.id}
                       onClick={() => handleAddPet(pet.id)}
-                      className="w-full text-left p-3 border rounded-lg hover:bg-blue-50 transition"
+                      className="w-full text-left p-3 border rounded-lg hover:bg-[#2FA5A4]/10 transition"
                     >
                       <p className="font-medium">{pet.nome}</p>
                       {pet.raca && (
@@ -355,7 +355,7 @@ export default function TutorDetailPage() {
           <div className="mt-8">
             <Link
               href="/tutores"
-              className="text-blue-600 hover:underline font-medium"
+              className="text-[#2FA5A4] hover:underline font-medium"
             >
               ← Voltar para tutores
             </Link>
