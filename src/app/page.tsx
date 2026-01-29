@@ -160,7 +160,7 @@ export default function Home() {
                     ) : (
                       <div className="relative w-[60%] h-[60%]">
                         <Image
-                          src="/pet-ausente.png"
+                          src="/pet-ausente-branca.png"
                           alt="Pet ausente"
                           fill
                           className="object-contain"
