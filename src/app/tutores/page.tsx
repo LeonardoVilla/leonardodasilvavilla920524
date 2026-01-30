@@ -130,7 +130,57 @@ export default function TutoresPage() {
                 {/* Tutores Table */}
                 {tutores.length > 0 ? (
                     <div>
-                        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+                        {/* Mobile cards */}
+                        <div className="grid grid-cols-1 gap-4 md:hidden mb-8">
+                            {tutores.map((tutor) => (
+                                <div
+                                    key={tutor.id}
+                                    className="bg-white rounded-lg shadow-sm border border-gray-100 p-4"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#2FA5A4] to-[#2FA5A4] overflow-hidden flex items-center justify-center text-white font-bold">
+                                            {tutor.foto?.url ? (
+                                                <Image
+                                                    src={tutor.foto.url}
+                                                    alt={`Foto de ${tutor.nome}`}
+                                                    width={40}
+                                                    height={40}
+                                                    className="h-10 w-10 object-cover"
+                                                    unoptimized
+                                                />
+                                            ) : (
+                                                <span>{tutor.nome?.charAt(0).toUpperCase() || "?"}</span>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold text-gray-900">{tutor.nome}</p>
+                                            <p className="text-sm text-gray-500">{tutor.email || "-"}</p>
+                                        </div>
+                                    </div>
+                                    <div className="mt-3 space-y-2 text-sm text-gray-600">
+                                        <div className="flex justify-between gap-3">
+                                            <span className="text-gray-500">Telefone</span>
+                                            <span className="text-right">{tutor.telefone || "-"}</span>
+                                        </div>
+                                        <div className="flex justify-between gap-3">
+                                            <span className="text-gray-500">Endereço</span>
+                                            <span className="text-right break-words">{tutor.endereco || "-"}</span>
+                                        </div>
+                                    </div>
+                                    <div className="mt-4">
+                                        <Link
+                                            href={`/tutores/${tutor.id}`}
+                                            className="inline-flex w-full items-center justify-center px-4 py-2 text-sm bg-[#2FA5A4] text-white rounded-lg hover:bg-[#2FA5A4] transition"
+                                        >
+                                            Ver detalhes
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Desktop table */}
+                        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8 hidden md:block">
                             <div className="overflow-x-auto">
                                 <table className="w-full">
                                     <thead className="bg-gray-100 border-b">
@@ -161,8 +211,19 @@ export default function TutoresPage() {
                                             >
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#2FA5A4] to-[#2FA5A4] flex items-center justify-center text-white font-bold">
-                                                            {tutor.nome?.charAt(0).toUpperCase() || "?"}
+                                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#2FA5A4] to-[#2FA5A4] overflow-hidden flex items-center justify-center text-white font-bold">
+                                                            {tutor.foto?.url ? (
+                                                                <Image
+                                                                    src={tutor.foto.url}
+                                                                    alt={`Foto de ${tutor.nome}`}
+                                                                    width={40}
+                                                                    height={40}
+                                                                    className="h-10 w-10 object-cover"
+                                                                    unoptimized
+                                                                />
+                                                            ) : (
+                                                                <span>{tutor.nome?.charAt(0).toUpperCase() || "?"}</span>
+                                                            )}
                                                         </div>
                                                         <span className="font-medium text-gray-900">
                                                             {tutor.nome}
