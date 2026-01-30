@@ -44,6 +44,15 @@ export async function apiFetch<T = unknown>(
       );
     }
 
+    if (
+      response.status === 204 ||
+      response.status === 205 ||
+      response.status === 304 ||
+      options.method === "HEAD"
+    ) {
+      return undefined as T;
+    }
+
     const rawText = await response.text();
     if (!rawText) {
       return undefined as T;
