@@ -101,7 +101,8 @@ export default function Home() {
             href="/pets/novo"
             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
           >
-            + Novo Pet
+            <span className="md:hidden">+ Novo</span>
+            <span className="hidden md:inline">+ Novo Pet</span>
           </Link>
         </div>
       </div>
