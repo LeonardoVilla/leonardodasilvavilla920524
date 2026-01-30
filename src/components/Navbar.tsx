@@ -22,13 +22,13 @@ export function Navbar() {
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <div className="flex-shrink-0">
-                        <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-[#2FA5A4]">
+                        <Link href="/" className="flex items-center gap-2 text-xl md:text-2xl font-bold text-[#2FA5A4]">
                             <Image
                                 src="/icone-de-cao-e-gato.png"
                                 alt="PetManager"
                                 width={68}
                                 height={68}
-                                className="h-18 w-18"
+                                className="h-12 w-12 md:h-18 md:w-18"
                                 priority
                             />
                             PetManager
@@ -82,7 +82,7 @@ export function Navbar() {
                             <summary className="btn btn-ghost">
                                 ☰
                             </summary>
-                            <ul className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <ul className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-56">
                                 <li>
                                     <Link href="/" className="flex items-center gap-2">
                                         <Image
@@ -107,6 +107,14 @@ export function Navbar() {
                                         Tutores
                                     </Link>
                                 </li>
+                                <li className="mt-1">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="flex items-center gap-2 text-red-600"
+                                    >
+                                        Sair
+                                    </button>
+                                </li>
                             </ul>
                         </details>
                     </div>
@@ -114,7 +122,7 @@ export function Navbar() {
                     {/* Logout Button */}
                     <button
                         onClick={handleLogout}
-                        className="ml-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                        className="ml-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition hidden md:inline-flex"
                     >
                         Sair
                     </button>
