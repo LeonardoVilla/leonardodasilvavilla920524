@@ -8,6 +8,7 @@ import { createPet, updatePet, addPetPhoto, deletePet } from "@/services/pets";
 import { PetResponseCompletoDto, PetRequestDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
 import { PetForm } from "@/components/PetForm";
+import Swal from "sweetalert2";
 
 export default function PetDetailPage() {
   const params = useParams();
@@ -81,15 +82,35 @@ export default function PetDetailPage() {
 
   const handleDelete = async () => {
     if (!pet) return;
-    const confirmed = window.confirm("Tem certeza que deseja excluir este pet?");
-    if (!confirmed) return;
+    const result = await Swal.fire({
+      title: "Excluir pet",
+      text: "Tem certeza que deseja excluir este pet?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Excluir",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#DC2626",
+    });
+    if (!result.isConfirmed) return;
 
     setDeleting(true);
     try {
       await deletePet(pet.id);
+      await Swal.fire({
+        title: "Excluído",
+        text: "Pet excluído com sucesso.",
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+      });
       router.push("/");
     } catch (err) {
       setError("Erro ao excluir pet");
+      await Swal.fire({
+        title: "Erro",
+        text: "Não foi possível excluir o pet.",
+        icon: "error",
+      });
     } finally {
       setDeleting(false);
     }

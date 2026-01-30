@@ -14,12 +14,13 @@
   "dependencies": {
     "next": "16.1.4",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "sweetalert2": "^11.26.17"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6",
     "@testing-library/react": "^14",
-    "@tailwindcss/postcss": "^4",
     "@types/jest": "^29",
     "@types/node": "^20",
     "@types/react": "^19",
