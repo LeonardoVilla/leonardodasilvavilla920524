@@ -4,6 +4,16 @@ import { storage } from "./storage";
 
 export type LoginResponse = AuthResponseDto;
 
+function setAuthCookie(isLoggedIn: boolean) {
+  if (typeof document === "undefined") return;
+  const secure = window.location.protocol === "https:" ? "; Secure" : "";
+  if (isLoggedIn) {
+    document.cookie = `pm_auth=1; Path=/; SameSite=Lax${secure}`;
+    return;
+  }
+  document.cookie = `pm_auth=; Max-Age=0; Path=/; SameSite=Lax${secure}`;
+}
+
 export async function login(
   username: string,
   password: string
@@ -21,6 +31,8 @@ export async function login(
   if (data.refresh_token) {
     storage.setRefreshToken(String(data.refresh_token));
   }
+
+  setAuthCookie(true);
 
   return data;
 }
@@ -54,4 +66,5 @@ export async function refreshToken(): Promise<LoginResponse> {
 export function logout() {
   storage.removeToken();
   storage.removeRefreshToken();
+  setAuthCookie(false);
 }
