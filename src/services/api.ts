@@ -17,8 +17,13 @@ export async function apiFetch<T = unknown>(
     const base = process.env.NEXT_PUBLIC_API_URL ?? BASE_URL;
     // Ensure headers object exists and add Authorization when token available
     const headers = new Headers(options.headers as HeadersInit | undefined);
+    if (!headers.has("Accept")) {
+      headers.set("Accept", "application/json");
+    }
+
+    const skipAuth = endpoint.startsWith("/autenticacao/login");
     const token = storage.getToken();
-    if (token && !headers.has("Authorization")) {
+    if (!skipAuth && token && !headers.has("Authorization")) {
       headers.set("Authorization", `Bearer ${token}`);
     }
 
@@ -30,6 +35,9 @@ export async function apiFetch<T = unknown>(
     const response = await fetch(`${base}${cleanEndpoint}`, { ...options, headers });
 
     if (!response.ok) {
+      if (response.status === 401) {
+        storage.removeTokens();
+      }
       throw new ApiError(
         "Não foi possível comunicar com o servidor",
         response.status
