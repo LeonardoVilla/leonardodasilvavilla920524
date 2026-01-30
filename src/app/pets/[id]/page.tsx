@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { apiFetch } from "@/services/api";
-import { createPet, updatePet, addPetPhoto } from "@/services/pets";
+import { createPet, updatePet, addPetPhoto, deletePet } from "@/services/pets";
 import { PetResponseCompletoDto, PetRequestDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
 import { PetForm } from "@/components/PetForm";
@@ -18,6 +18,7 @@ export default function PetDetailPage() {
   const [loading, setLoading] = useState(!isNew);
   const [editing, setEditing] = useState(isNew);
   const [uploading, setUploading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -78,6 +79,22 @@ export default function PetDetailPage() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!pet) return;
+    const confirmed = window.confirm("Tem certeza que deseja excluir este pet?");
+    if (!confirmed) return;
+
+    setDeleting(true);
+    try {
+      await deletePet(pet.id);
+      router.push("/");
+    } catch (err) {
+      setError("Erro ao excluir pet");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -121,12 +138,21 @@ export default function PetDetailPage() {
               )}
             </div>
             {!editing && pet && (
-              <button
-                onClick={() => setEditing(true)}
-                className="px-4 py-2 bg-[#2FA5A4] text-white rounded-lg hover:bg-[#2FA5A4]"
-              >
-                Editar
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setEditing(true)}
+                  className="px-4 py-2 bg-[#2FA5A4] text-white rounded-lg hover:bg-[#2FA5A4]"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                >
+                  {deleting ? "Excluindo..." : "Excluir"}
+                </button>
+              </div>
             )}
           </div>
         </div>
