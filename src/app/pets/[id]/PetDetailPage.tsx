@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { apiFetch } from "@/services/api";
-import { createPet, updatePet, addPetPhoto, deletePet } from "@/services/pets";
 import { PetResponseCompletoDto, PetRequestDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
 import { PetForm } from "@/components/PetForm";
 import Swal from "sweetalert2";
+import { appFacade } from "@/services/facade";
 
 export default function PetDetailPage() {
     const params = useParams();
@@ -24,6 +23,19 @@ export default function PetDetailPage() {
     const router = useRouter();
 
     useEffect(() => {
+        const petSub = appFacade.selectedPet$.subscribe(setPet);
+        const stateSub = appFacade.petDetailState$.subscribe((state) => {
+            setLoading(state.loading);
+            setError(state.error);
+        });
+
+        return () => {
+            petSub.unsubscribe();
+            stateSub.unsubscribe();
+        };
+    }, []);
+
+    useEffect(() => {
         if (!isNew) {
             (async () => {
                 const { storage } = await import("@/services/storage");
@@ -34,27 +46,24 @@ export default function PetDetailPage() {
                 }
 
                 try {
-                    const data = await apiFetch<PetResponseCompletoDto>(`/v1/pets/${petId}`);
-                    setPet(data);
+                    await appFacade.loadPetById(petId);
                 } catch (err) {
-                    setError("Pet não encontrado");
-                } finally {
-                    setLoading(false);
+                    // estado de erro já é atualizado no facade
                 }
             })();
+        } else {
+            appFacade.clearSelectedPet();
         }
     }, [petId, isNew, router]);
 
     const handleFormSubmit = async (data: PetRequestDto) => {
         try {
             if (isNew) {
-                const result = await createPet(data);
-                setPet(result as any);
+                const result = await appFacade.createPet(data);
                 setEditing(false);
                 router.push(`/pets/${result.id}`);
             } else {
-                const result = await updatePet(Number(petId), data);
-                setPet(result as any);
+                await appFacade.updatePet(Number(petId), data);
                 setEditing(false);
             }
             setError(null);
@@ -70,8 +79,7 @@ export default function PetDetailPage() {
 
         setUploading(true);
         try {
-            const foto = await addPetPhoto(pet.id, file);
-            setPet({ ...pet, foto });
+            await appFacade.addPetPhoto(pet.id, file);
             setError(null);
         } catch (err) {
             setError("Erro ao fazer upload da foto");
@@ -95,7 +103,7 @@ export default function PetDetailPage() {
 
         setDeleting(true);
         try {
-            await deletePet(pet.id);
+            await appFacade.deletePet(pet.id);
             await Swal.fire({
                 title: "Excluído",
                 text: "Pet excluído com sucesso.",
