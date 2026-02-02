@@ -53,17 +53,11 @@ export default function Home() {
           size: 10,
           nome: searchName || undefined,
         });
-      } catch (err) {
+      } catch {
         // estado de erro já é atualizado no facade
       }
     })();
   }, [router, page, searchName]);
-
-  const handleLogout = () => {
-    const { logout } = require("@/services/auth");
-    logout();
-    router.replace("/login");
-  };
 
   // 5️⃣ Tela de carregamento
   if (loading) {
@@ -156,10 +150,13 @@ export default function Home() {
                   {/* Pet Image */}
                   <div className="h-48 bg-gradient-to-br from-[#2FA5A4] to-[#2FA5A4] flex items-center justify-center overflow-hidden relative">
                     {pet.foto?.url ? (
-                      <img
+                      <Image
                         src={pet.foto.url}
                         alt={pet.nome}
-                        className="w-full h-full object-cover group-hover:scale-105 transition"
+                        fill
+                        className="object-cover group-hover:scale-105 transition"
+                        sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                        unoptimized
                       />
                     ) : (
                       <div className="relative w-[60%] h-[60%]">
