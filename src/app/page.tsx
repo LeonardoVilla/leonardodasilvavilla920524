@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { apiFetch } from "@/services/api";
-import { PetResponseDto, PagedPetResponseDto } from "@/types/api";
+import { PetResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
+import { appFacade } from "@/services/facade";
 
 export default function Home() {
   // 🔹 dados
@@ -22,6 +22,20 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
+    const petsSub = appFacade.pets$.subscribe(setPets);
+    const stateSub = appFacade.petsState$.subscribe((state) => {
+      setTotalPages(state.totalPages);
+      setLoading(state.loading);
+      setError(state.error);
+    });
+
+    return () => {
+      petsSub.unsubscribe();
+      stateSub.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
     (async () => {
       // 1️⃣ Verifica login ANTES de chamar a API
       const { storage } = await import("@/services/storage");
@@ -32,26 +46,15 @@ export default function Home() {
         return;
       }
 
-      // 2️⃣ Busca os pets
+      // 2️⃣ Busca os pets (Facade + BehaviorSubject)
       try {
-        const params = new URLSearchParams({
-          page: String(page),
-          size: "10",
+        await appFacade.loadPets({
+          page,
+          size: 10,
+          nome: searchName || undefined,
         });
-
-        if (searchName) params.append("nome", searchName);
-
-        const data = await apiFetch<PagedPetResponseDto>(
-          `/v1/pets?${params.toString()}`
-        );
-        setPets(Array.isArray(data.content) ? data.content : []);
-        setTotalPages(data.pageCount || 1);
-        setError(null);
       } catch (err) {
-        setError("Não foi possível carregar os pets. Tente novamente.");
-        setPets([]);
-      } finally {
-        setLoading(false);
+        // estado de erro já é atualizado no facade
       }
     })();
   }, [router, page, searchName]);
