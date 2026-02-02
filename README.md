@@ -274,6 +274,10 @@ Base URL: `https://pet-manager-api.geia.vip`
 - [x] Clean Code
 - [x] Tratamento de erros
 
+## O que não foi feito (solicitado no edital, mas não consta na API)
+
+- **Campo “espécie” do pet**: solicitado no edital, porém a documentação da API não expõe esse campo nos DTOs de pet e não retorna esse dado nos endpoints de pets. Por isso, não foi implementado no formulário, listagem e detalhamento.
+
 ---
 
 **Data de Conclusão**: 02 de fevereiro de 2026  
