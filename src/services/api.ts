@@ -21,7 +21,9 @@ export async function apiFetch<T = unknown>(
       headers.set("Accept", "application/json");
     }
 
-    const skipAuth = endpoint.startsWith("/autenticacao/login");
+    const skipAuth =
+      endpoint.startsWith("/autenticacao/login") ||
+      endpoint.startsWith("/autenticacao/refresh");
     const token = storage.getToken();
     if (!skipAuth && token && !headers.has("Authorization")) {
       headers.set("Authorization", `Bearer ${token}`);
@@ -32,7 +34,24 @@ export async function apiFetch<T = unknown>(
       ? endpoint.slice(1)
       : endpoint;
 
-    const response = await fetch(`${base}${cleanEndpoint}`, { ...options, headers });
+    const makeRequest = () =>
+      fetch(`${base}${cleanEndpoint}`, { ...options, headers });
+
+    let response = await makeRequest();
+
+    if (!response.ok && response.status === 401 && !skipAuth) {
+      try {
+        const { refreshToken } = await import("./auth");
+        await refreshToken();
+        const newToken = storage.getToken();
+        if (newToken) {
+          headers.set("Authorization", `Bearer ${newToken}`);
+          response = await makeRequest();
+        }
+      } catch {
+        // If refresh fails, fall through to error handling below
+      }
+    }
 
     if (!response.ok) {
       if (response.status === 401) {
