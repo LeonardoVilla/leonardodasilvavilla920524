@@ -4,14 +4,41 @@
 
 Aplicação web moderna para gerenciamento de pets e tutores, desenvolvida com Next.js, TypeScript e Tailwind CSS.
 
-## 📋 Informações do Projeto
+## Tutorial Docker
+
+### Pré-requisitos
+- Docker Desktop instalado e em execução
+
+### Passo a passo
+
+```bash
+# Build e subida dos containers
+docker compose up -d --build
+
+# Verificar status
+docker compose ps
+
+# Ver logs do app
+docker compose logs -f app
+```
+
+### Acesso
+- Abra no navegador: http://localhost:3000
+
+### Encerrar
+
+```bash
+docker compose down
+```
+
+## Informações do Projeto
 
 - **Vaga**: Desenvolvedor Frontend
 - **Data de Inscrição**: 27 de janeiro de 2026
 - **Status**: ✅ Completo
 - **Repositório**: Repositório Privado
 
-## ✨ Funcionalidades Implementadas
+## Funcionalidades Implementadas
 
 ### ✅ Requisitos Gerais
 - [x] Consumo de dados em tempo real com `fetch`
@@ -78,24 +105,32 @@ Aplicação web moderna para gerenciamento de pets e tutores, desenvolvida com N
 - [x] Padrão Facade com serviços separados
 - [x] Lazy Loading de rotas
 
-## 🏗️ Arquitetura
+## Arquitetura
 
 ```
 src/
-├── app/                    # Páginas e layout principal
-│   ├── page.tsx           # Listagem de pets
-│   ├── login/             # Página de login
+├── app/                    # App Router, páginas e layout
+│   ├── api/
+│   │   └── health/route.ts # Health check
+│   ├── favicon.ico         # Favicon
+│   ├── globals.css         # Estilos globais
+│   ├── layout.tsx          # Layout raiz
+│   ├── page.tsx            # Listagem de pets
+│   ├── login/
+│   │   └── page.tsx        # Página de login
 │   ├── pets/
-│   │   ├── [id]/page.tsx  # Detalhamento e edição de pet
-│   │   └── layout.tsx     # Lazy loading
+│   │   ├── [id]/page.tsx   # Detalhamento e edição de pet
+│   │   └── layout.tsx      # Lazy loading
 │   └── tutores/
-│       ├── page.tsx       # Listagem de tutores
-│       ├── [id]/page.tsx  # Detalhamento e edição
-│       └── layout.tsx     # Lazy loading
+│       ├── page.tsx        # Listagem de tutores
+│       ├── [id]/page.tsx   # Detalhamento e edição
+│       └── layout.tsx      # Lazy loading
 ├── components/             # Componentes reutilizáveis
 │   ├── Navbar.tsx         # Navegação principal
 │   ├── PetForm.tsx        # Formulário de pets
 │   └── TutorForm.tsx      # Formulário de tutores
+├── hooks/                  # Hooks customizados
+│   └── useAuth.ts          # Autenticação e sessão
 ├── services/              # Lógica de API (Facade Pattern)
 │   ├── api.ts            # Cliente HTTP base
 │   ├── auth.ts           # Autenticação
@@ -109,7 +144,7 @@ src/
     └── validation.ts    # Validações e máscaras
 ```
 
-## 🚀 Como Executar
+## Como Executar
 
 ### Pré-requisitos
 - Node.js 18+
@@ -134,7 +169,7 @@ pnpm dev
 - **Username**: admin
 - **Password**: admin
 
-## 🧪 Testes
+## Testes
 
 ```bash
 # Executar testes
@@ -151,7 +186,7 @@ pnpm test:coverage
 - ✅ Tratamento de erros
 - ✅ 10+ testes unitários
 
-## 🐳 Docker
+## Docker
 
 ```bash
 # Build da imagem
@@ -164,14 +199,14 @@ docker run -p 3000:3000 -e NEXT_PUBLIC_API_URL=https://pet-manager-api.geia.vip 
 docker-compose up -d
 ```
 
-## 📦 Build para Produção
+## Build para Produção
 
 ```bash
 pnpm build
 pnpm start
 ```
 
-## 📊 API Integration
+## API Integration
 
 Base URL: `https://pet-manager-api.geia.vip`
 
@@ -184,7 +219,7 @@ Base URL: `https://pet-manager-api.geia.vip`
 - ✅ POST/DELETE `/v1/tutores/{id}/fotos` - Fotos de tutores
 - ✅ POST/DELETE `/v1/tutores/{id}/pets/{petId}` - Vincular/desvincular pets
 
-## ✨ Features Principais
+## Features Principais
 
 ### Autenticação
 - ✅ Login com JWT
@@ -217,16 +252,16 @@ Base URL: `https://pet-manager-api.geia.vip`
 - ✅ Tablet (768px+)
 - ✅ Desktop (1024px+)
 
-## 🛠️ Tecnologias
+## Tecnologias
 
-- Next.js 14
+- Next.js 16.1.4
 - TypeScript 5
 - Tailwind CSS 3
 - Jest
 - Docker
 - pnpm
 
-## ✅ Checklist de Entrega
+## Checklist de Entrega
 
 - [x] Implementação completa dos requisitos
 - [x] Layout responsivo
@@ -241,6 +276,6 @@ Base URL: `https://pet-manager-api.geia.vip`
 
 ---
 
-**Data de Conclusão**: 27 de janeiro de 2026  
+**Data de Conclusão**: 02 de fevereiro de 2026  
 **Status**: ✅ Completo  
 **Versão**: 1.0.0
