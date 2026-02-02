@@ -13,7 +13,7 @@ describe("apiFetch", () => {
     const mockData = { id: 1, nome: "Test Pet" };
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockData,
+      text: async () => JSON.stringify(mockData),
     });
 
     const result = await apiFetch("/v1/pets");
@@ -33,7 +33,7 @@ describe("apiFetch", () => {
     localStorage.setItem("token", "test-token");
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({}),
+      text: async () => "{}",
     });
 
     await apiFetch("/v1/pets");
@@ -47,9 +47,7 @@ describe("apiFetch", () => {
   it("should handle JSON parsing errors", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => {
-        throw new Error("Invalid JSON");
-      },
+      text: async () => "{invalid-json}",
     });
 
     await expect(apiFetch("/v1/pets")).rejects.toThrow(ApiError);

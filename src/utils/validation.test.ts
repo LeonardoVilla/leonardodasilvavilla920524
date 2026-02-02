@@ -111,7 +111,7 @@ describe("Masks", () => {
     });
 
     it("should handle phone unmasking", () => {
-      expect(masks.unmask("(11) 9333-4444")).toBe("11933344");
+      expect(masks.unmask("(11) 9333-4444")).toBe("1193334444");
     });
   });
 });
