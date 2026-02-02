@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { PetResponseCompletoDto, PetRequestDto } from "@/types/api";
+import { PetResponseCompletoDto, PetRequestDto, ProprietarioResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
 import { PetForm } from "@/components/PetForm";
 import Swal from "sweetalert2";
 import { appFacade } from "@/services/facade";
+import { getTutorById } from "@/services/tutores";
 
 export default function PetDetailPage() {
     const params = useParams();
@@ -20,6 +21,7 @@ export default function PetDetailPage() {
     const [uploading, setUploading] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [tutoresDetalhes, setTutoresDetalhes] = useState<ProprietarioResponseDto[]>([]);
     const router = useRouter();
 
     useEffect(() => {
@@ -55,6 +57,32 @@ export default function PetDetailPage() {
             appFacade.clearSelectedPet();
         }
     }, [petId, isNew, router]);
+
+    useEffect(() => {
+        let isActive = true;
+
+        (async () => {
+            if (!pet?.tutores || pet.tutores.length === 0) {
+                if (isActive) setTutoresDetalhes([]);
+                return;
+            }
+
+            try {
+                const detalhes = await Promise.all(
+                    pet.tutores.map((tutor) => getTutorById(tutor.id))
+                );
+                if (isActive) {
+                    setTutoresDetalhes(detalhes);
+                }
+            } catch {
+                if (isActive) setTutoresDetalhes([]);
+            }
+        })();
+
+        return () => {
+            isActive = false;
+        };
+    }, [pet?.tutores]);
 
     const handleFormSubmit = async (data: PetRequestDto) => {
         try {
@@ -147,6 +175,9 @@ export default function PetDetailPage() {
             </div>
         );
     }
+
+    const tutoresParaExibir =
+        tutoresDetalhes.length > 0 ? tutoresDetalhes : pet?.tutores;
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -257,13 +288,13 @@ export default function PetDetailPage() {
                                         </div>
                                     )}
 
-                                    {pet.tutores && pet.tutores.length > 0 && (
+                                    {tutoresParaExibir && tutoresParaExibir.length > 0 && (
                                         <div className="border-t pt-6">
                                             <h3 className="text-sm font-medium text-gray-600 mb-4">
                                                 Tutores
                                             </h3>
                                             <div className="space-y-3">
-                                                {pet.tutores.map((tutor) => (
+                                                {tutoresParaExibir.map((tutor) => (
                                                     <Link
                                                         key={tutor.id}
                                                         href={`/tutores/${tutor.id}`}
