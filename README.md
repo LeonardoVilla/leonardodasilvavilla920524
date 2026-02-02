@@ -102,7 +102,7 @@ docker compose down
 ### ✅ Requisitos para Sênior
 - [x] Health Checks
 - [x] Testes unitários (10+ testes)
-- [x] Padrão Facade com serviços separados
+- [x] Padrão Facade com BehaviorSubject (RxJS)
 - [x] Lazy Loading de rotas
 
 ## Arquitetura

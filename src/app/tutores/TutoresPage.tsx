@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { apiFetch } from "@/services/api";
-import { ProprietarioResponseDto, PagedProprietarioResponseDto } from "@/types/api";
+import { ProprietarioResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
+import { appFacade } from "@/services/facade";
 
 export default function TutoresPage() {
     const [tutores, setTutores] = useState<ProprietarioResponseDto[]>([]);
@@ -19,6 +19,20 @@ export default function TutoresPage() {
     const router = useRouter();
 
     useEffect(() => {
+        const tutoresSub = appFacade.tutores$.subscribe(setTutores);
+        const stateSub = appFacade.tutoresState$.subscribe((state) => {
+            setTotalPages(state.totalPages);
+            setLoading(state.loading);
+            setError(state.error);
+        });
+
+        return () => {
+            tutoresSub.unsubscribe();
+            stateSub.unsubscribe();
+        };
+    }, []);
+
+    useEffect(() => {
         (async () => {
             const { storage } = await import("@/services/storage");
             const token = storage.getToken();
@@ -29,24 +43,13 @@ export default function TutoresPage() {
             }
 
             try {
-                const params = new URLSearchParams({
-                    page: String(page),
-                    size: "10",
+                await appFacade.loadTutores({
+                    page,
+                    size: 10,
+                    nome: searchName || undefined,
                 });
-
-                if (searchName) params.append("nome", searchName);
-
-                const data = await apiFetch<PagedProprietarioResponseDto>(
-                    `/v1/tutores?${params.toString()}`
-                );
-                setTutores(Array.isArray(data.content) ? data.content : []);
-                setTotalPages(data.pageCount || 1);
-                setError(null);
             } catch (err) {
-                setError("Não foi possível carregar os tutores. Tente novamente.");
-                setTutores([]);
-            } finally {
-                setLoading(false);
+                // estado de erro já é atualizado no facade
             }
         })();
     }, [router, page, searchName]);

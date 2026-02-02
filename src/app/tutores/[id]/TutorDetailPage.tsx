@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { apiFetch } from "@/services/api";
-import { createTutor, updateTutor, addTutorPhoto, linkPetToTutor, unlinkPetFromTutor, deleteTutor } from "@/services/tutores";
 import { ProprietarioResponseComPetsDto, ProprietarioRequestDto, PetResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
 import { TutorForm } from "@/components/TutorForm";
 import Swal from "sweetalert2";
+import { appFacade } from "@/services/facade";
 
 export default function TutorDetailPage() {
     const params = useParams();
@@ -26,6 +25,19 @@ export default function TutorDetailPage() {
     const router = useRouter();
 
     useEffect(() => {
+        const tutorSub = appFacade.selectedTutor$.subscribe(setTutor);
+        const stateSub = appFacade.tutorDetailState$.subscribe((state) => {
+            setLoading(state.loading);
+            setError(state.error);
+        });
+
+        return () => {
+            tutorSub.unsubscribe();
+            stateSub.unsubscribe();
+        };
+    }, []);
+
+    useEffect(() => {
         (async () => {
             const { storage } = await import("@/services/storage");
             const token = storage.getToken();
@@ -36,21 +48,18 @@ export default function TutorDetailPage() {
 
             try {
                 if (!isNew) {
-                    const data = await apiFetch<ProprietarioResponseComPetsDto>(
-                        `/v1/tutores/${tutorId}`
-                    );
-                    setTutor(data);
+                    await appFacade.loadTutorById(tutorId);
+                } else {
+                    appFacade.clearSelectedTutor();
                 }
 
                 // Carregar todos os pets
-                const petsResponse = await apiFetch<any>("/v1/pets?size=100");
+                const petsResponse = await appFacade.loadPets({ page: 0, size: 100 });
                 setAllPets(petsResponse.content || []);
             } catch (err) {
                 if (!isNew) {
                     setError("Tutor não encontrado");
                 }
-            } finally {
-                setLoading(false);
             }
         })();
     }, [tutorId, isNew, router]);
@@ -58,13 +67,11 @@ export default function TutorDetailPage() {
     const handleFormSubmit = async (data: ProprietarioRequestDto) => {
         try {
             if (isNew) {
-                const result = await createTutor(data);
-                setTutor(result as any);
+                const result = await appFacade.createTutor(data);
                 setEditing(false);
                 router.push(`/tutores/${result.id}`);
             } else {
-                const result = await updateTutor(Number(tutorId), data);
-                setTutor(result as any);
+                await appFacade.updateTutor(Number(tutorId), data);
                 setEditing(false);
             }
             setError(null);
@@ -80,8 +87,7 @@ export default function TutorDetailPage() {
 
         setUploading(true);
         try {
-            const foto = await addTutorPhoto(tutor.id, file);
-            setTutor({ ...tutor, foto });
+            await appFacade.addTutorPhoto(tutor.id, file);
             setError(null);
         } catch (err) {
             setError("Erro ao fazer upload da foto");
@@ -93,11 +99,8 @@ export default function TutorDetailPage() {
     const handleAddPet = async (petId: number) => {
         if (!tutor) return;
         try {
-            await linkPetToTutor(tutor.id, petId);
-            const updated = await apiFetch<ProprietarioResponseComPetsDto>(
-                `/v1/tutores/${tutor.id}`
-            );
-            setTutor(updated);
+            await appFacade.linkPet(tutor.id, petId);
+            await appFacade.loadTutorById(tutor.id);
             setShowAddPetModal(false);
             setError(null);
         } catch (err) {
@@ -108,11 +111,8 @@ export default function TutorDetailPage() {
     const handleRemovePet = async (petId: number) => {
         if (!tutor) return;
         try {
-            await unlinkPetFromTutor(tutor.id, petId);
-            const updated = await apiFetch<ProprietarioResponseComPetsDto>(
-                `/v1/tutores/${tutor.id}`
-            );
-            setTutor(updated);
+            await appFacade.unlinkPet(tutor.id, petId);
+            await appFacade.loadTutorById(tutor.id);
             setError(null);
         } catch (err) {
             setError("Erro ao desvincular pet");
@@ -134,7 +134,7 @@ export default function TutorDetailPage() {
 
         setDeleting(true);
         try {
-            await deleteTutor(tutor.id);
+            await appFacade.deleteTutor(tutor.id);
             await Swal.fire({
                 title: "Excluído",
                 text: "Tutor excluído com sucesso.",
