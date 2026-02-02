@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PetRequestDto } from "@/types/api";
-import { validation, masks } from "@/utils/validation";
+import { validation } from "@/utils/validation";
 
 interface PetFormProps {
   onSubmit: (data: PetRequestDto) => Promise<void>;

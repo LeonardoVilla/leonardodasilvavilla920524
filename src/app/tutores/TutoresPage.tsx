@@ -48,7 +48,7 @@ export default function TutoresPage() {
                     size: 10,
                     nome: searchName || undefined,
                 });
-            } catch (err) {
+            } catch {
                 // estado de erro já é atualizado no facade
             }
         })();

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { PetResponseCompletoDto, PetRequestDto, ProprietarioResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
 import { PetForm } from "@/components/PetForm";
@@ -49,7 +50,7 @@ export default function PetDetailPage() {
 
                 try {
                     await appFacade.loadPetById(petId);
-                } catch (err) {
+                } catch {
                     // estado de erro já é atualizado no facade
                 }
             })();
@@ -109,7 +110,7 @@ export default function PetDetailPage() {
         try {
             await appFacade.addPetPhoto(pet.id, file);
             setError(null);
-        } catch (err) {
+        } catch {
             setError("Erro ao fazer upload da foto");
         } finally {
             setUploading(false);
@@ -140,7 +141,7 @@ export default function PetDetailPage() {
                 showConfirmButton: false,
             });
             router.push("/");
-        } catch (err) {
+        } catch {
             setError("Erro ao excluir pet");
             await Swal.fire({
                 title: "Erro",
@@ -223,12 +224,15 @@ export default function PetDetailPage() {
                     {/* Foto */}
                     <div className="md:col-span-1">
                         <div className="bg-white rounded-lg shadow-md p-6">
-                            <div className="aspect-square rounded-lg bg-gradient-to-br from-[#2FA5A4] to-[#2FA5A4] flex items-center justify-center text-6xl mb-4 overflow-hidden">
+                            <div className="aspect-square rounded-lg bg-gradient-to-br from-[#2FA5A4] to-[#2FA5A4] flex items-center justify-center text-6xl mb-4 overflow-hidden relative">
                                 {pet?.foto?.url ? (
-                                    <img
+                                    <Image
                                         src={pet.foto.url}
                                         alt={pet.nome}
-                                        className="w-full h-full object-cover"
+                                        fill
+                                        className="object-cover"
+                                        sizes="(min-width: 1024px) 33vw, 100vw"
+                                        unoptimized
                                     />
                                 ) : (
                                     "🐾"
