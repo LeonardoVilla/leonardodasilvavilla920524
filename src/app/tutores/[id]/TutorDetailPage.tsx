@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ProprietarioResponseComPetsDto, ProprietarioRequestDto, PetResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
 import { TutorForm } from "@/components/TutorForm";
@@ -56,7 +57,7 @@ export default function TutorDetailPage() {
                 // Carregar todos os pets
                 const petsResponse = await appFacade.loadPets({ page: 0, size: 100 });
                 setAllPets(petsResponse.content || []);
-            } catch (err) {
+            } catch {
                 if (!isNew) {
                     setError("Tutor não encontrado");
                 }
@@ -89,7 +90,7 @@ export default function TutorDetailPage() {
         try {
             await appFacade.addTutorPhoto(tutor.id, file);
             setError(null);
-        } catch (err) {
+        } catch {
             setError("Erro ao fazer upload da foto");
         } finally {
             setUploading(false);
@@ -103,7 +104,7 @@ export default function TutorDetailPage() {
             await appFacade.loadTutorById(tutor.id);
             setShowAddPetModal(false);
             setError(null);
-        } catch (err) {
+        } catch {
             setError("Erro ao vincular pet");
         }
     };
@@ -114,7 +115,7 @@ export default function TutorDetailPage() {
             await appFacade.unlinkPet(tutor.id, petId);
             await appFacade.loadTutorById(tutor.id);
             setError(null);
-        } catch (err) {
+        } catch {
             setError("Erro ao desvincular pet");
         }
     };
@@ -143,7 +144,7 @@ export default function TutorDetailPage() {
                 showConfirmButton: false,
             });
             router.push("/tutores");
-        } catch (err) {
+        } catch {
             setError("Erro ao excluir tutor");
             await Swal.fire({
                 title: "Erro",
@@ -224,12 +225,15 @@ export default function TutorDetailPage() {
                     {/* Foto */}
                     <div className="md:col-span-1">
                         <div className="bg-white rounded-lg shadow-md p-6">
-                            <div className="aspect-square rounded-lg bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-6xl mb-4 overflow-hidden">
+                            <div className="aspect-square rounded-lg bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-6xl mb-4 overflow-hidden relative">
                                 {tutor?.foto?.url ? (
-                                    <img
+                                    <Image
                                         src={tutor.foto.url}
                                         alt={tutor.nome}
-                                        className="w-full h-full object-cover"
+                                        fill
+                                        className="object-cover"
+                                        sizes="(min-width: 1024px) 33vw, 100vw"
+                                        unoptimized
                                     />
                                 ) : (
                                     tutor?.nome?.charAt(0).toUpperCase() || "?"
