@@ -17,7 +17,17 @@ export function Navbar() {
         const updateAuth = () => setIsLoggedIn(Boolean(storage.getToken()));
         updateAuth();
         window.addEventListener("storage", updateAuth);
-        return () => window.removeEventListener("storage", updateAuth);
+        window.addEventListener("pm-auth-change", updateAuth);
+        return () => {
+            window.removeEventListener("storage", updateAuth);
+            window.removeEventListener("pm-auth-change", updateAuth);
+        };
+    }, []);
+
+    useEffect(() => {
+        const openLogin = () => setIsModalOpen(true);
+        window.addEventListener("pm-open-login", openLogin);
+        return () => window.removeEventListener("pm-open-login", openLogin);
     }, []);
 
     const isActive = (path: string) => pathname === path;
@@ -63,45 +73,47 @@ export function Navbar() {
                     </div>
 
                     {/* Navigation Links */}
-                    <nav className="hidden md:flex items-center gap-1">
-                        <Link
-                            href="/"
-                            className={`px-4 py-2 rounded-lg transition ${isActive("/")
-                                ? "bg-[#2FA5A4] text-white"
-                                : "text-gray-700 hover:bg-gray-100"
-                                }`}
-                        >
-                            <span className="inline-flex items-center gap-2">
-                                <Image
-                                    src="/icone-de-cao-e-gato-menu.png"
-                                    alt="Pets"
-                                    width={20}
-                                    height={20}
-                                    className="h-5 w-5"
-                                />
-                                Pets
-                            </span>
-                        </Link>
+                    {isLoggedIn && (
+                        <nav className="hidden md:flex items-center gap-1">
+                            <Link
+                                href="/"
+                                className={`px-4 py-2 rounded-lg transition ${isActive("/")
+                                    ? "bg-[#2FA5A4] text-white"
+                                    : "text-gray-700 hover:bg-gray-100"
+                                    }`}
+                            >
+                                <span className="inline-flex items-center gap-2">
+                                    <Image
+                                        src="/icone-de-cao-e-gato-menu.png"
+                                        alt="Pets"
+                                        width={20}
+                                        height={20}
+                                        className="h-5 w-5"
+                                    />
+                                    Pets
+                                </span>
+                            </Link>
 
-                        <Link
-                            href="/tutores"
-                            className={`px-4 py-2 rounded-lg transition ${isActive("/tutores")
-                                ? "bg-[#2FA5A4] text-white"
-                                : "text-gray-700 hover:bg-gray-100"
-                                }`}
-                        >
-                            <span className="inline-flex items-center gap-2">
-                                <Image
-                                    src="/icone-de-tutor-menu.png"
-                                    alt="Tutores"
-                                    width={20}
-                                    height={20}
-                                    className="h-5 w-5"
-                                />
-                                Tutores
-                            </span>
-                        </Link>
-                    </nav>
+                            <Link
+                                href="/tutores"
+                                className={`px-4 py-2 rounded-lg transition ${isActive("/tutores")
+                                    ? "bg-[#2FA5A4] text-white"
+                                    : "text-gray-700 hover:bg-gray-100"
+                                    }`}
+                            >
+                                <span className="inline-flex items-center gap-2">
+                                    <Image
+                                        src="/icone-de-tutor-menu.png"
+                                        alt="Tutores"
+                                        width={20}
+                                        height={20}
+                                        className="h-5 w-5"
+                                    />
+                                    Tutores
+                                </span>
+                            </Link>
+                        </nav>
+                    )}
 
                     {/* Mobile Menu Button */}
                     <div className="md:hidden">
@@ -110,30 +122,34 @@ export function Navbar() {
                                 ☰
                             </summary>
                             <ul className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-56">
-                                <li>
-                                    <Link href="/" className="flex items-center gap-2">
-                                        <Image
-                                            src="/icone-de-cao-e-gato-menu.png"
-                                            alt="Pets"
-                                            width={20}
-                                            height={20}
-                                            className="h-5 w-5"
-                                        />
-                                        Pets
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/tutores" className="flex items-center gap-2">
-                                        <Image
-                                            src="/icone-de-tutor-menu.png"
-                                            alt="Tutores"
-                                            width={20}
-                                            height={20}
-                                            className="h-5 w-5"
-                                        />
-                                        Tutores
-                                    </Link>
-                                </li>
+                                {isLoggedIn && (
+                                    <>
+                                        <li>
+                                            <Link href="/" className="flex items-center gap-2">
+                                                <Image
+                                                    src="/icone-de-cao-e-gato-menu.png"
+                                                    alt="Pets"
+                                                    width={20}
+                                                    height={20}
+                                                    className="h-5 w-5"
+                                                />
+                                                Pets
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link href="/tutores" className="flex items-center gap-2">
+                                                <Image
+                                                    src="/icone-de-tutor-menu.png"
+                                                    alt="Tutores"
+                                                    width={20}
+                                                    height={20}
+                                                    className="h-5 w-5"
+                                                />
+                                                Tutores
+                                            </Link>
+                                        </li>
+                                    </>
+                                )}
                                 <li className="mt-1">
                                     {isLoggedIn ? (
                                         <button

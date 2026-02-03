@@ -28,6 +28,7 @@ import {
     unlinkPetFromTutor,
     updateTutor,
 } from "@/services/tutores";
+import { ApiError } from "@/services/api";
 
 export type ListState = {
     loading: boolean;
@@ -83,9 +84,12 @@ class AppFacade {
             return data;
         } catch (error) {
             this.pets$.next([]);
+            const requiresLogin = error instanceof ApiError && error.status === 401;
             this.petsState$.next({
                 loading: false,
-                error: "Não foi possível carregar os pets. Tente novamente.",
+                error: requiresLogin
+                    ? "A API exige autenticação para listar pets. Faça login para visualizar a listagem."
+                    : "Não foi possível carregar os pets. Tente novamente.",
                 page: params.page,
                 totalPages: 0,
             });
