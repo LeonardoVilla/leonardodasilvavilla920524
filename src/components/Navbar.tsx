@@ -2,22 +2,49 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { LoginModal } from "@/components/LoginModal";
 import { logout } from "@/services/auth";
+import { storage } from "@/services/storage";
 
 export function Navbar() {
-    const router = useRouter();
     const pathname = usePathname();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const handleLogout = () => {
-        logout();
-        router.replace("/login");
-    };
+    useEffect(() => {
+        const updateAuth = () => setIsLoggedIn(Boolean(storage.getToken()));
+        updateAuth();
+        window.addEventListener("storage", updateAuth);
+        return () => window.removeEventListener("storage", updateAuth);
+    }, []);
 
     const isActive = (path: string) => pathname === path;
 
+    const dispatchAuthChange = () => {
+        if (typeof window === "undefined") return;
+        window.dispatchEvent(new Event("pm-auth-change"));
+    };
+
+    const handleLogout = () => {
+        logout();
+        setIsLoggedIn(false);
+        dispatchAuthChange();
+    };
+
+    const handleLoginSuccess = () => {
+        setIsLoggedIn(true);
+        dispatchAuthChange();
+    };
+
     return (
         <header className="bg-white shadow-sm sticky top-0 z-50">
+            <LoginModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSuccess={handleLoginSuccess}
+            />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
@@ -108,24 +135,51 @@ export function Navbar() {
                                     </Link>
                                 </li>
                                 <li className="mt-1">
-                                    <button
-                                        onClick={handleLogout}
-                                        className="flex items-center gap-2 text-red-600"
-                                    >
-                                        Sair
-                                    </button>
+                                    {isLoggedIn ? (
+                                        <button
+                                            onClick={handleLogout}
+                                            className="flex w-full items-center justify-center gap-2 text-red-600"
+                                        >
+                                            Sair
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() => setIsModalOpen(true)}
+                                            className="flex w-full items-center justify-center gap-2 text-gray-800"
+                                        >
+                                            Entrar
+                                        </button>
+                                    )}
                                 </li>
                             </ul>
                         </details>
                     </div>
 
-                    {/* Logout Button */}
-                    <button
-                        onClick={handleLogout}
-                        className="ml-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition hidden md:inline-flex"
-                    >
-                        Sair
-                    </button>
+                    <div className="flex items-center gap-3">
+                        {!isLoggedIn ? (
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 transition hover:border-[#2FA5A4] hover:text-[#2FA5A4]"
+                                aria-label="Abrir modal de login"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    className="h-5 w-5"
+                                    fill="currentColor"
+                                >
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                </svg>
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleLogout}
+                                className="ml-4 hidden items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-white transition hover:bg-red-700 md:inline-flex"
+                            >
+                                Sair
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </header>
