@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { PetResponseDto } from "@/types/api";
@@ -18,8 +17,7 @@ export default function Home() {
   // 🔹 estados de UX
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const router = useRouter();
+  const [authTrigger, setAuthTrigger] = useState(0);
 
   useEffect(() => {
     const petsSub = appFacade.pets$.subscribe(setPets);
@@ -36,17 +34,13 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const handleAuthChange = () => setAuthTrigger((prev) => prev + 1);
+    window.addEventListener("pm-auth-change", handleAuthChange);
+    return () => window.removeEventListener("pm-auth-change", handleAuthChange);
+  }, []);
+
+  useEffect(() => {
     (async () => {
-      // 1️⃣ Verifica login ANTES de chamar a API
-      const { storage } = await import("@/services/storage");
-      const token = storage.getToken();
-
-      if (!token) {
-        router.replace("/login");
-        return;
-      }
-
-      // 2️⃣ Busca os pets (Facade + BehaviorSubject)
       try {
         await appFacade.loadPets({
           page,
@@ -57,7 +51,7 @@ export default function Home() {
         // estado de erro já é atualizado no facade
       }
     })();
-  }, [router, page, searchName]);
+  }, [page, searchName, authTrigger]);
 
   // 5️⃣ Tela de carregamento
   if (loading) {
@@ -134,6 +128,9 @@ export default function Home() {
             >
               Tentar novamente
             </button>
+            <p className="mt-2 text-sm text-gray-500">
+              Abra o ícone de login no canto superior para se autenticar e recarregar os pets.
+            </p>
           </div>
         )}
 
