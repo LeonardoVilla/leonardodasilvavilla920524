@@ -6,6 +6,7 @@ import Image from "next/image";
 import { PetResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
 import { appFacade } from "@/services/facade";
+import { storage } from "@/services/storage";
 
 export default function Home() {
   // 🔹 dados
@@ -18,6 +19,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [authTrigger, setAuthTrigger] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const petsSub = appFacade.pets$.subscribe(setPets);
@@ -40,7 +42,23 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const updateAuth = () => setIsLoggedIn(Boolean(storage.getToken()));
+    updateAuth();
+    window.addEventListener("pm-auth-change", updateAuth);
+    window.addEventListener("storage", updateAuth);
+    return () => {
+      window.removeEventListener("pm-auth-change", updateAuth);
+      window.removeEventListener("storage", updateAuth);
+    };
+  }, []);
+
+  useEffect(() => {
     (async () => {
+      if (!storage.getToken()) {
+        setLoading(false);
+        setError(null);
+        return;
+      }
       try {
         await appFacade.loadPets({
           page,
@@ -52,6 +70,53 @@ export default function Home() {
       }
     })();
   }, [page, searchName, authTrigger]);
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+
+        <div className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <h1 className="text-3xl font-bold text-gray-900">
+              <span className="inline-flex items-center gap-2">
+                <Image
+                  src="/icone-de-cao-e-gato-menu.png"
+                  alt="Pets"
+                  width={28}
+                  height={28}
+                  className="h-7 w-7"
+                />
+                Pets
+              </span>
+            </h1>
+            <p className="text-gray-600 text-sm mt-1">
+              Para acessar a listagem, é necessário estar autenticado.
+            </p>
+          </div>
+        </div>
+
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <p className="text-gray-800 font-medium">
+              Faça login para acessar Pets e Tutores.
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => window.dispatchEvent(new Event("pm-open-login"))}
+                className="px-4 py-2 bg-[#2FA5A4] text-white rounded-lg hover:bg-[#2FA5A4] transition"
+              >
+                Fazer login
+              </button>
+              <p className="text-sm text-gray-600">
+                Você também pode usar o ícone de login no topo.
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   // 5️⃣ Tela de carregamento
   if (loading) {
@@ -128,9 +193,17 @@ export default function Home() {
             >
               Tentar novamente
             </button>
-            <p className="mt-2 text-sm text-gray-500">
-              Abra o ícone de login no canto superior para se autenticar e recarregar os pets.
-            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => window.dispatchEvent(new Event("pm-open-login"))}
+                className="px-4 py-2 bg-[#2FA5A4] text-white rounded hover:bg-[#2FA5A4] transition"
+              >
+                Fazer login
+              </button>
+              <p className="text-sm text-gray-600">
+                Você também pode usar o ícone de login no topo.
+              </p>
+            </div>
           </div>
         )}
 

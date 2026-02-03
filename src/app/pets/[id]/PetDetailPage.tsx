@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,6 +10,7 @@ import { PetForm } from "@/components/PetForm";
 import Swal from "sweetalert2";
 import { appFacade } from "@/services/facade";
 import { getTutorById } from "@/services/tutores";
+import { storage } from "@/services/storage";
 
 export default function PetDetailPage() {
     const params = useParams();
@@ -23,7 +24,33 @@ export default function PetDetailPage() {
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [tutoresDetalhes, setTutoresDetalhes] = useState<ProprietarioResponseDto[]>([]);
+    const [hasToken, setHasToken] = useState(false);
+    const promptedLoginRef = useRef(false);
     const router = useRouter();
+
+    const openLoginModal = () => {
+        if (typeof window === "undefined") return;
+        window.dispatchEvent(new Event("pm-open-login"));
+    };
+
+    const ensureAuthenticated = (message: string) => {
+        const token = storage.getToken();
+        if (token) return true;
+        setError(message);
+        openLoginModal();
+        return false;
+    };
+
+    useEffect(() => {
+        const updateAuth = () => setHasToken(Boolean(storage.getToken()));
+        updateAuth();
+        window.addEventListener("pm-auth-change", updateAuth);
+        window.addEventListener("storage", updateAuth);
+        return () => {
+            window.removeEventListener("pm-auth-change", updateAuth);
+            window.removeEventListener("storage", updateAuth);
+        };
+    }, []);
 
     useEffect(() => {
         const petSub = appFacade.selectedPet$.subscribe(setPet);
@@ -41,13 +68,6 @@ export default function PetDetailPage() {
     useEffect(() => {
         if (!isNew) {
             (async () => {
-                const { storage } = await import("@/services/storage");
-                const token = storage.getToken();
-                if (!token) {
-                    router.replace("/login");
-                    return;
-                }
-
                 try {
                     await appFacade.loadPetById(petId);
                 } catch {
@@ -58,6 +78,14 @@ export default function PetDetailPage() {
             appFacade.clearSelectedPet();
         }
     }, [petId, isNew, router]);
+
+    useEffect(() => {
+        if (!isNew) return;
+        if (hasToken) return;
+        if (promptedLoginRef.current) return;
+        promptedLoginRef.current = true;
+        openLoginModal();
+    }, [isNew, hasToken]);
 
     useEffect(() => {
         let isActive = true;
@@ -88,10 +116,16 @@ export default function PetDetailPage() {
     const handleFormSubmit = async (data: PetRequestDto) => {
         try {
             if (isNew) {
+                if (!ensureAuthenticated("Faça login para cadastrar um pet.")) {
+                    throw new Error("Faça login para cadastrar um pet.");
+                }
                 const result = await appFacade.createPet(data);
                 setEditing(false);
                 router.push(`/pets/${result.id}`);
             } else {
+                if (!ensureAuthenticated("Faça login para editar este pet.")) {
+                    throw new Error("Faça login para editar este pet.");
+                }
                 await appFacade.updatePet(Number(petId), data);
                 setEditing(false);
             }
@@ -103,6 +137,7 @@ export default function PetDetailPage() {
     };
 
     const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!ensureAuthenticated("Faça login para alterar a foto do pet.")) return;
         const file = e.target.files?.[0];
         if (!file || !pet) return;
 
@@ -118,6 +153,7 @@ export default function PetDetailPage() {
     };
 
     const handleDelete = async () => {
+        if (!ensureAuthenticated("Faça login para excluir este pet.")) return;
         if (!pet) return;
         const result = await Swal.fire({
             title: "Excluir pet",
@@ -177,6 +213,52 @@ export default function PetDetailPage() {
         );
     }
 
+    if (isNew && !hasToken) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Navbar />
+
+                <div className="bg-white shadow-sm border-b">
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <h1 className="text-3xl font-bold text-gray-900">Novo Pet</h1>
+                                <p className="text-gray-600 mt-2">
+                                    Para cadastrar um pet, é necessário fazer login.
+                                </p>
+                            </div>
+                            <button
+                                onClick={openLoginModal}
+                                className="px-4 py-2 bg-[#2FA5A4] text-white rounded-lg hover:bg-[#2FA5A4]"
+                            >
+                                Fazer login
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                    {error && (
+                        <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+                            <p className="text-red-700">{error}</p>
+                        </div>
+                    )}
+
+                    <div className="bg-white rounded-lg shadow-md p-6">
+                        <p className="text-gray-700">
+                            Para cadastrar um pet, é necessário estar autenticado.
+                        </p>
+                        <div className="mt-4">
+                            <Link href="/" className="text-[#2FA5A4] hover:underline font-medium">
+                                ← Voltar para pets
+                            </Link>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        );
+    }
+
     const tutoresParaExibir =
         tutoresDetalhes.length > 0 ? tutoresDetalhes : pet?.tutores;
 
@@ -201,7 +283,10 @@ export default function PetDetailPage() {
                         {!editing && pet && (
                             <div className="flex gap-2">
                                 <button
-                                    onClick={() => setEditing(true)}
+                                    onClick={() => {
+                                        if (!ensureAuthenticated("Faça login para editar este pet.")) return;
+                                        setEditing(true);
+                                    }}
                                     className="px-4 py-2 bg-[#2FA5A4] text-white rounded-lg hover:bg-[#2FA5A4]"
                                 >
                                     Editar

@@ -56,6 +56,10 @@ export async function apiFetch<T = unknown>(
     if (!response.ok) {
       if (response.status === 401) {
         storage.removeTokens();
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("pm-auth-change"));
+          window.dispatchEvent(new Event("pm-open-login"));
+        }
       }
       throw new ApiError(
         "Não foi possível comunicar com o servidor",
