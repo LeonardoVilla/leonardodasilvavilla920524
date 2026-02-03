@@ -9,6 +9,7 @@ import { Navbar } from "@/components/Navbar";
 import { TutorForm } from "@/components/TutorForm";
 import Swal from "sweetalert2";
 import { appFacade } from "@/services/facade";
+import { storage } from "@/services/storage";
 
 export default function TutorDetailPage() {
     const params = useParams();
@@ -23,7 +24,19 @@ export default function TutorDetailPage() {
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [showAddPetModal, setShowAddPetModal] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        const updateAuth = () => setIsLoggedIn(Boolean(storage.getToken()));
+        updateAuth();
+        window.addEventListener("pm-auth-change", updateAuth);
+        window.addEventListener("storage", updateAuth);
+        return () => {
+            window.removeEventListener("pm-auth-change", updateAuth);
+            window.removeEventListener("storage", updateAuth);
+        };
+    }, []);
 
     useEffect(() => {
         const tutorSub = appFacade.selectedTutor$.subscribe(setTutor);
@@ -40,10 +53,10 @@ export default function TutorDetailPage() {
 
     useEffect(() => {
         (async () => {
-            const { storage } = await import("@/services/storage");
             const token = storage.getToken();
             if (!token) {
-                router.replace("/login");
+                window.dispatchEvent(new Event("pm-open-login"));
+                setError("Para acessar tutores, é necessário fazer login.");
                 return;
             }
 
@@ -63,7 +76,46 @@ export default function TutorDetailPage() {
                 }
             }
         })();
-    }, [tutorId, isNew, router]);
+    }, [tutorId, isNew, router, isLoggedIn]);
+
+    if (!isLoggedIn) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Navbar />
+                <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                    <div className="bg-white rounded-lg shadow-md p-6">
+                        <h1 className="text-2xl font-bold text-gray-900">
+                            {isNew ? "Novo Tutor" : "Tutor"}
+                        </h1>
+                        <p className="text-gray-600 mt-2">
+                            Para acessar esta página, é necessário estar autenticado.
+                        </p>
+                        <div className="mt-4 flex flex-wrap items-center gap-3">
+                            <button
+                                onClick={() => window.dispatchEvent(new Event("pm-open-login"))}
+                                className="px-4 py-2 bg-[#2FA5A4] text-white rounded-lg hover:bg-[#2FA5A4] transition"
+                            >
+                                Fazer login
+                            </button>
+                            <p className="text-sm text-gray-600">
+                                Você também pode usar o ícone de login no topo.
+                            </p>
+                        </div>
+                        {error && (
+                            <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
+                                <p className="text-red-700">{error}</p>
+                            </div>
+                        )}
+                        <div className="mt-6">
+                            <Link href="/" className="text-[#2FA5A4] hover:underline font-medium">
+                                ← Voltar
+                            </Link>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        );
+    }
 
     const handleFormSubmit = async (data: ProprietarioRequestDto) => {
         try {

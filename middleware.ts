@@ -1,16 +1,8 @@
-import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
-    const auth = request.cookies.get("pm_auth")?.value;
-
-    if (!auth) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/login";
-        url.searchParams.set("from", request.nextUrl.pathname);
-        return NextResponse.redirect(url);
-    }
-
+export function middleware() {
+    // Auth is handled in the client (login modal + token).
+    // Keeping middleware non-blocking avoids redirect loops and lets public pages render.
     return NextResponse.next();
 }
 
