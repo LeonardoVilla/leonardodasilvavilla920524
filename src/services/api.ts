@@ -95,7 +95,8 @@ export async function apiFetch<T = unknown>(
     // Para outros erros, loga e mostra mensagem genérica
     console.error("Erro de comunicação com a API:", error);
     throw new ApiError(
-      "Servidor indisponível. Tente novamente mais tarde."
+      "Servidor indisponível. Tente novamente mais tarde.",
+      0
     );
   }
 }
