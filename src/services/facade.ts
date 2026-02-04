@@ -85,10 +85,15 @@ class AppFacade {
         } catch (error) {
             this.pets$.next([]);
             const requiresLogin = error instanceof ApiError && error.status === 401;
+            const serverUnavailable =
+                error instanceof ApiError &&
+                (error.status === 0 || (error.status !== undefined && error.status >= 500));
             this.petsState$.next({
                 loading: false,
                 error: requiresLogin
                     ? "A API exige autenticação para listar pets. Faça login para visualizar a listagem."
+                    : serverUnavailable
+                    ? "Servidor fora do ar. Tente novamente mais tarde."
                     : "Não foi possível carregar os pets. Tente novamente.",
                 page: params.page,
                 totalPages: 0,
