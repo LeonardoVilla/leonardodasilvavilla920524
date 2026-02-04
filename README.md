@@ -9,7 +9,7 @@ Aplicação web moderna para gerenciamento de pets e tutores, desenvolvida com N
 ### Pré-requisitos
 - Docker Desktop instalado e em execução
 
-### Passo a passo
+### Passo a passo para executar o projeto com Docker
 
 ```bash
 # Build e subida dos containers
