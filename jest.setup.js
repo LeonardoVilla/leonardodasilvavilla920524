@@ -1,12 +1,5 @@
 import '@testing-library/jest-dom'
 
-jest.mock('next/image', () => ({
-  __esModule: true,
-  default: function NextImage({ priority, fill, sizes, ...props }) {
-    return <img {...props} />
-  },
-}))
-
 // Mock next/router
 jest.mock('next/router', () => ({
   useRouter() {
