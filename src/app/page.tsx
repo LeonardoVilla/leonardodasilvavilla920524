@@ -5,12 +5,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { PetResponseDto } from "@/types/api";
 import { Navbar } from "@/components/Navbar";
+import { PetsCarousel } from "@/components/PetsCarousel";
 import { appFacade } from "@/services/facade";
+import { listPets } from "@/services/pets";
 import { storage } from "@/services/storage";
+
+const CAROUSEL_CACHE_TTL_MS = 5 * 60 * 1000;
+let carouselCache: { timestamp: number; data: PetResponseDto[] } | null = null;
 
 export default function Home() {
   // 🔹 dados
   const [pets, setPets] = useState<PetResponseDto[]>([]);
+  const [carouselPets, setCarouselPets] = useState<PetResponseDto[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [searchName, setSearchName] = useState("");
@@ -70,6 +76,43 @@ export default function Home() {
       }
     })();
   }, [page, searchName, authTrigger]);
+
+  useEffect(() => {
+    if (!storage.getToken()) {
+      setCarouselPets([]);
+      carouselCache = null;
+      return;
+    }
+
+    if (
+      carouselCache &&
+      Date.now() - carouselCache.timestamp < CAROUSEL_CACHE_TTL_MS
+    ) {
+      setCarouselPets(carouselCache.data);
+      return;
+    }
+
+    (async () => {
+      try {
+        const allPets: PetResponseDto[] = [];
+        let currentPage = 0;
+        let pageCount = 1;
+        const size = 50;
+
+        while (currentPage < pageCount) {
+          const response = await listPets(currentPage, size);
+          allPets.push(...(response.content || []));
+          pageCount = response.pageCount || 1;
+          currentPage += 1;
+        }
+
+        setCarouselPets(allPets);
+        carouselCache = { timestamp: Date.now(), data: allPets };
+      } catch {
+        setCarouselPets([]);
+      }
+    })();
+  }, [authTrigger]);
 
   if (!isLoggedIn) {
     return (
@@ -165,6 +208,8 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <PetsCarousel pets={carouselPets} />
+
         {/* Search Bar */}
         <div className="mb-8">
           <div className="bg-white rounded-lg shadow-sm p-4">
