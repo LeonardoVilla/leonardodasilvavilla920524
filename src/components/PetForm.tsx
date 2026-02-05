@@ -6,7 +6,7 @@ import { validation } from "@/utils/validation";
 
 interface PetFormProps {
   onSubmit: (data: PetRequestDto) => Promise<void>;
-  initialData?: PetRequestDto & { id?: number };
+  initialData?: (Partial<PetRequestDto> & { id?: number });
   loading?: boolean;
   error?: string;
 }
@@ -14,6 +14,7 @@ interface PetFormProps {
 export function PetForm({ onSubmit, initialData, loading, error }: PetFormProps) {
   const [formData, setFormData] = useState<PetRequestDto>({
     nome: initialData?.nome || "",
+    especie: initialData?.especie || "",
     raca: initialData?.raca || "",
     idade: initialData?.idade || undefined,
   });
@@ -48,6 +49,11 @@ export function PetForm({ onSubmit, initialData, loading, error }: PetFormProps)
       return;
     }
 
+    if (!validation.isValidName(formData.especie)) {
+      setFormError("Espécie do pet é obrigatória (mínimo 3 caracteres)");
+      return;
+    }
+
     if (formData.idade && !validation.isValidAge(formData.idade)) {
       setFormError("Idade deve ser entre 1 e 50 anos");
       return;
@@ -78,6 +84,24 @@ export function PetForm({ onSubmit, initialData, loading, error }: PetFormProps)
           value={formData.nome}
           onChange={handleChange}
           placeholder="Ex: Rex, Luna..."
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg
+                     focus:outline-none focus:ring-2 focus:ring-[#2FA5A4]
+                     focus:border-[#2FA5A4]"
+          required
+        />
+      </div>
+
+      {/* Espécie */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Espécie *
+        </label>
+        <input
+          type="text"
+          name="especie"
+          value={formData.especie}
+          onChange={handleChange}
+          placeholder="Ex: Cachorro, Gato..."
           className="w-full px-4 py-2 border border-gray-300 rounded-lg
                      focus:outline-none focus:ring-2 focus:ring-[#2FA5A4]
                      focus:border-[#2FA5A4]"

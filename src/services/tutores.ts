@@ -1,4 +1,4 @@
-import { apiFetch } from "./api";
+import { apiFetch, ApiError } from "./api";
 import {
     ProprietarioRequestDto,
     ProprietarioResponseDto,
@@ -52,9 +52,23 @@ export async function updateTutor(
 }
 
 export async function deleteTutor(id: number): Promise<void> {
-    await apiFetch<void>(`/v1/tutores/${id}`, {
-        method: "DELETE",
-    });
+    try {
+        await apiFetch<void>(`/v1/tutores/${id}`, {
+            method: "DELETE",
+        });
+        return;
+    } catch (error) {
+        // If the backend deleted but returned an error (or the client saw a network error),
+        // confirm whether the resource is gone; if so, treat as success.
+        try {
+            await getTutorById(id);
+        } catch (verifyError) {
+            if (verifyError instanceof ApiError && (verifyError.status === 400 || verifyError.status === 404)) {
+                return;
+            }
+        }
+        throw error;
+    }
 }
 
 // ===== OPERAÇÕES COM FOTOS =====

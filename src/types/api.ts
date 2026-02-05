@@ -24,6 +24,7 @@ export interface AnexoResponseDto {
 // ===== PETS =====
 export interface PetRequestDto {
   nome: string;
+  especie: string;
   raca?: string;
   idade?: number;
 }
@@ -31,6 +32,7 @@ export interface PetRequestDto {
 export interface PetResponseDto {
   id: number;
   nome: string;
+  especie?: string;
   raca?: string;
   idade?: number;
   foto?: AnexoResponseDto;
@@ -39,6 +41,7 @@ export interface PetResponseDto {
 export interface PetResponseCompletoDto {
   id: number;
   nome: string;
+  especie?: string;
   raca?: string;
   idade?: number;
   foto?: AnexoResponseDto;

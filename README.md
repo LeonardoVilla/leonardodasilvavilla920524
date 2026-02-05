@@ -44,7 +44,7 @@ docker compose down
 - [x] Consumo de dados em tempo real com `fetch`
 - [x] Layout responsivo (mobile, tablet, desktop)
 - [x] Tailwind CSS para estilização
-- [x] Lazy Loading de rotas com `React.lazy()`
+- [x] Lazy Loading de rotas com App Router + `next/dynamic` (Pets e Tutores)
 - [x] TypeScript com tipagem completa
 - [x] Boas práticas de organização e componentização
 - [x] Testes unitários básicos (Jest)
@@ -53,7 +53,7 @@ docker compose down
 
 #### 1. Tela Inicial - Listagem de Pets
 - [x] GET `/v1/pets` - Listagem paginada
-- [x] Cards com foto, nome, raça, idade
+- [x] Cards com foto, nome, espécie, idade (e raça quando disponível)
 - [x] Paginação (10 por página)
 - [x] Busca por nome
 - [x] Botão para novo pet
@@ -68,9 +68,12 @@ docker compose down
 #### 3. Tela de Cadastro/Edição de Pet
 - [x] POST `/v1/pets` - Novo pet
 - [x] PUT `/v1/pets/{id}` - Editar pet
-- [x] Campos: nome, raça, idade
+- [x] Campos: nome, espécie, idade, raça
 - [x] Validações
 - [x] Formulário responsivo
+
+> Observação sobre **Espécie**: o frontend exibe `Espécie` quando a API retorna o campo e mostra **"Não informada"** quando não existir.
+> Para não quebrar o CRUD caso a API ainda não aceite o campo, o app tenta enviar `especie` e, se receber erro **400**, faz um retry sem esse campo.
 
 #### 4. Upload de Foto - Pet
 - [x] POST `/v1/pets/{id}/fotos` - Upload

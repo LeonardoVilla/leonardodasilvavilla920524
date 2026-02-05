@@ -47,9 +47,21 @@ describe("apiFetch", () => {
   it("should handle JSON parsing errors", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
+      headers: { get: () => "application/json" },
       text: async () => "{invalid-json}",
     });
 
     await expect(apiFetch("/v1/pets")).rejects.toThrow(ApiError);
+  });
+
+  it("should not throw on plain text success responses", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      headers: { get: () => "text/plain" },
+      text: async () => "Tutor removido com sucesso",
+    });
+
+    const result = await apiFetch<string>("/v1/tutores/1", { method: "DELETE" });
+    expect(result).toBe("Tutor removido com sucesso");
   });
 });
