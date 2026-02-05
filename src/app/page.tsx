@@ -294,6 +294,11 @@ export default function Home() {
 
                     {/* Details */}
                     <div className="space-y-2 text-sm text-gray-600">
+                      <div className="flex items-center">
+                        <span className="font-medium mr-2">Espécie:</span>
+                        <span>{pet.especie || "Não informada"}</span>
+                      </div>
+
                       {pet.raca && (
                         <div className="flex items-center">
                           <span className="font-medium mr-2">Raça:</span>

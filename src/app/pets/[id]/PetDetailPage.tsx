@@ -275,6 +275,7 @@ export default function PetDetailPage() {
                             </h1>
                             {!editing && pet && (
                                 <p className="text-gray-600 mt-2">
+                                    {pet.especie && <span>{pet.especie} • </span>}
                                     {pet.raca && <span>{pet.raca} • </span>}
                                     {pet.idade && <span>{pet.idade} anos</span>}
                                 </p>
@@ -365,6 +366,15 @@ export default function PetDetailPage() {
                                                 Raça
                                             </h3>
                                             <p className="text-gray-900">{pet.raca}</p>
+                                        </div>
+                                    )}
+
+                                    {pet.especie && (
+                                        <div>
+                                            <h3 className="text-sm font-medium text-gray-600 mb-2">
+                                                Espécie
+                                            </h3>
+                                            <p className="text-gray-900">{pet.especie}</p>
                                         </div>
                                     )}
 

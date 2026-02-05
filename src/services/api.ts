@@ -81,12 +81,19 @@ export async function apiFetch<T = unknown>(
       return undefined as T;
     }
 
-    try {
-      return JSON.parse(rawText) as T;
-    } catch {
-      // If response is not JSON, surface a generic error
-      throw new ApiError("Invalid JSON response from server", response.status);
+    const contentType = response.headers?.get?.("content-type") ?? "";
+    const looksLikeJson = /^\s*[\[{]/.test(rawText);
+
+    if (contentType.includes("application/json") || looksLikeJson) {
+      try {
+        return JSON.parse(rawText) as T;
+      } catch {
+        throw new ApiError("Invalid JSON response from server", response.status);
+      }
     }
+
+    // Some endpoints may legitimately return plain text (e.g., DELETE success messages).
+    return rawText as unknown as T;
   } catch (error) {
     // Se for um ApiError, relança com sua mensagem original
     if (error instanceof ApiError) {
