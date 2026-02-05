@@ -44,7 +44,7 @@ docker compose down
 - [x] Consumo de dados em tempo real com `fetch`
 - [x] Layout responsivo (mobile, tablet, desktop)
 - [x] Tailwind CSS para estilização
-- [x] Lazy Loading de rotas com `React.lazy()`
+- [x] Lazy Loading de rotas com `next/dynamic`
 - [x] TypeScript com tipagem completa
 - [x] Boas práticas de organização e componentização
 - [x] Testes unitários básicos (Jest)
@@ -98,6 +98,10 @@ docker compose down
 - [x] POST `/autenticacao/login` - Login com JWT
 - [x] PUT `/autenticacao/refresh` - Renovação de token
 - [x] Gerenciamento de tokens no localStorage
+
+### O que não foi feito (solicitado no edital, mas não consta na API)
+
+- **Campo “espécie” do pet**: solicitado no edital, porém a documentação da API não expõe esse campo nos DTOs de pet e não retorna esse dado nos endpoints de pets. Por isso, não foi implementado no formulário, listagem e detalhamento.
 
 ### ✅ Requisitos para Sênior
 - [x] Health Checks
@@ -273,10 +277,6 @@ Base URL: `https://pet-manager-api.geia.vip`
 - [x] Commits pequenos e explicativos
 - [x] Clean Code
 - [x] Tratamento de erros
-
-## O que não foi feito (solicitado no edital, mas não consta na API)
-
-- **Campo “espécie” do pet**: solicitado no edital, porém a documentação da API não expõe esse campo nos DTOs de pet e não retorna esse dado nos endpoints de pets. Por isso, não foi implementado no formulário, listagem e detalhamento.
 
 ---
 
