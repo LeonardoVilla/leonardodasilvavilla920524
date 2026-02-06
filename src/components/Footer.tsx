@@ -9,6 +9,22 @@ export function Footer() {
         </p>
         <div className="flex items-center gap-3">
           <Link
+            href="https://github.com/LeonardoVilla"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub de Leonardo Villa"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 text-gray-600 transition hover:border-[#2FA5A4] hover:text-[#2FA5A4]"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="h-4 w-4"
+              fill="currentColor"
+            >
+              <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.77.6-3.35-1.17-3.35-1.17-.45-1.14-1.1-1.44-1.1-1.44-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.36 1.09 2.94.83.09-.65.35-1.09.63-1.34-2.21-.25-4.53-1.11-4.53-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.85-2.32 4.7-4.54 4.95.36.31.68.92.68 1.86v2.76c0 .26.18.57.69.48A10 10 0 0 0 12 2z" />
+            </svg>
+          </Link>
+          <Link
             href="https://www.linkedin.com/in/leonardotech/"
             target="_blank"
             rel="noreferrer"
