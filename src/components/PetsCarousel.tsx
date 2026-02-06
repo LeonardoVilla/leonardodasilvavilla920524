@@ -24,10 +24,28 @@ export function PetsCarousel({
 }: PetsCarouselProps) {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const handleChange = () => setIsMobile(mediaQuery.matches);
+
+    handleChange();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
+
+    mediaQuery.addListener(handleChange);
+    return () => mediaQuery.removeListener(handleChange);
+  }, []);
+
+  const effectivePageSize = isMobile ? 1 : pageSize;
 
   const totalPages = useMemo(
-    () => Math.max(1, Math.ceil(pets.length / pageSize)),
-    [pets.length, pageSize]
+    () => Math.max(1, Math.ceil(pets.length / effectivePageSize)),
+    [pets.length, effectivePageSize]
   );
 
   useEffect(() => {
@@ -95,7 +113,10 @@ export function PetsCarousel({
           }`}
         >
           {pets
-            .slice(carouselIndex * pageSize, carouselIndex * pageSize + pageSize)
+            .slice(
+              carouselIndex * effectivePageSize,
+              carouselIndex * effectivePageSize + effectivePageSize
+            )
             .map((pet) => (
               <div
                 key={pet.id}
