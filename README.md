@@ -32,7 +32,7 @@ cd leonardodasilvavilla920524
 ls
 ```
 
-### Passo a passo para executar o projeto com Docker
+### Passo a passo para executar o projeto com Docker (produção)
 
 ```bash
 # Build e subida dos containers
@@ -136,39 +136,59 @@ docker compose down
 
 ```
 src/
-├── app/                    # App Router, páginas e layout
+├── app/                       # App Router, paginas e layout
 │   ├── api/
-│   │   └── health/route.ts # Health check
-│   ├── favicon.ico         # Favicon
-│   ├── globals.css         # Estilos globais
-│   ├── layout.tsx          # Layout raiz
-│   ├── page.tsx            # Listagem de pets
+│   │   └── health/route.ts    # Health check
+│   ├── globals.css            # Estilos globais
+│   ├── layout.tsx             # Layout raiz
+│   ├── page.tsx               # Listagem de pets
 │   ├── login/
-│   │   └── page.tsx        # Página de login
+│   │   └── page.tsx           # Pagina de login
 │   ├── pets/
-│   │   ├── [id]/page.tsx   # Detalhamento e edição de pet
-│   │   └── layout.tsx      # Lazy loading
+│   │   ├── [id]/
+│   │   │   ├── page.tsx        # Wrapper da rota dinamica
+│   │   │   └── PetDetailPage.tsx
+│   │   └── layout.tsx          # Lazy loading
 │   └── tutores/
-│       ├── page.tsx        # Listagem de tutores
-│       ├── [id]/page.tsx   # Detalhamento e edição
-│       └── layout.tsx      # Lazy loading
-├── components/             # Componentes reutilizáveis
-│   ├── Navbar.tsx         # Navegação principal
-│   ├── PetForm.tsx        # Formulário de pets
-│   └── TutorForm.tsx      # Formulário de tutores
-├── hooks/                  # Hooks customizados
-│   └── useAuth.ts          # Autenticação e sessão
-├── services/              # Lógica de API (Facade Pattern)
-│   ├── api.ts            # Cliente HTTP base
-│   ├── auth.ts           # Autenticação
-│   ├── pets.ts           # CRUD de pets
-│   ├── tutores.ts        # CRUD de tutores
-│   ├── baseUrl.ts        # Configuração de URL
-│   └── storage.ts        # Gerenciamento de tokens
-├── types/                # Tipos TypeScript
-│   └── api.ts           # Interfaces da API
-└── utils/               # Utilitários
-    └── validation.ts    # Validações e máscaras
+│       ├── page.tsx            # Wrapper da listagem
+│       ├── TutoresPage.tsx
+│       ├── [id]/
+│       │   ├── page.tsx        # Wrapper da rota dinamica
+│       │   └── TutorDetailPage.tsx
+│       └── layout.tsx          # Lazy loading
+├── components/                # Componentes reutilizaveis
+│   ├── Footer.tsx
+│   ├── LoginModal.tsx
+│   ├── Navbar.tsx
+│   ├── PetForm.tsx
+│   ├── PetsCarousel.tsx
+│   ├── TutorForm.tsx
+│   └── __tests__/
+│       ├── Navbar.test.tsx
+│       ├── PetForm.test.tsx
+│       └── TutorForm.test.tsx
+├── hooks/                     # Hooks customizados
+│   └── useAuth.ts             # Autenticacao e sessao
+├── services/                  # Logica de API (Facade Pattern)
+│   ├── api.test.ts
+│   ├── api.ts
+│   ├── auth.ts
+│   ├── baseUrl.ts
+│   ├── facade.ts
+│   ├── pets.ts
+│   ├── storage.ts
+│   └── tutores.ts
+├── types/                     # Tipos TypeScript
+│   ├── api.ts
+│   └── jest-dom.d.ts
+└── utils/                     # Utilitarios
+    ├── validation.test.ts
+    └── validation.ts
+
+public/
+└── icone-de-cao-e-gato.avif
+
+middleware.ts                 # Middleware do Next.js
 ```
 
 ## Como Executar
@@ -182,6 +202,9 @@ src/
 ```bash
 # Instalar dependências
 pnpm install
+
+# Se voce nao tiver pnpm instalado
+npm install
 
 # Configurar variáveis de ambiente
 echo 'NEXT_PUBLIC_API_URL=https://pet-manager-api.geia.vip' > .env.local
@@ -198,6 +221,8 @@ pnpm dev
 
 ## Testes
 
+### Local (recomendado)
+
 ```bash
 # Executar testes
 pnpm test
@@ -206,11 +231,24 @@ pnpm test
 pnpm test:coverage
 ```
 
+### Docker
+
+> Observacao: a imagem de runtime instala apenas dependencias de producao, entao os testes nao rodam dentro do container final.
+
+```bash
+# Executar testes usando o stage de build
+docker build --target builder -t pet-manager-builder .
+docker run --rm pet-manager-builder pnpm test
+```
+
 ### Testes Implementados
 - ✅ Validações (CPF, email, telefone, nome, idade)
 - ✅ Máscaras (CPF, telefone)
 - ✅ apiFetch com autenticação
 - ✅ Tratamento de erros
+- ✅ Componentes: Navbar, PetForm, TutorForm, Footer, LoginModal, PetsCarousel
+- ✅ Hook: useAuth
+- ✅ Services: auth, pets, tutores, facade, baseUrl, storage
 - ✅ 10+ testes unitários
 
 ## Docker
@@ -222,8 +260,8 @@ docker build -t pet-manager:latest .
 # Executar container
 docker run -p 3000:3000 -e NEXT_PUBLIC_API_URL=https://pet-manager-api.geia.vip pet-manager:latest
 
-# Com docker-compose
-docker-compose up -d
+# Com docker-compose (producao)
+docker compose up -d --build
 ```
 
 ## Build para Produção
