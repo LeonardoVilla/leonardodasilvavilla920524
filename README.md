@@ -33,7 +33,8 @@ docker compose down
 
 ## Informações do Projeto
 
-- **Vaga**: Desenvolvedor Frontend
+- **Vaga**: ANALISTA DE TI - PERFIL PROFISSIONAL/ESPECIALIDADE - Engenheiro da Computação - Sênior 
+- **Projeto:**: ANEXO II-B - Projeto Desenvolvedor Front End 
 - **Data de Inscrição**: 27 de janeiro de 2026
 - **Status**: ✅ Completo
 - **Repositório**: Repositório Privado
