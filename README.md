@@ -9,6 +9,29 @@ Aplicação web moderna para gerenciamento de pets e tutores, desenvolvida com N
 ### Pré-requisitos
 - Docker Desktop instalado e em execução
 
+### Primeiro passo
+- Clone este repositório e acesse a pasta do projeto antes de rodar os comandos Docker.
+
+Windows (PowerShell):
+
+```powershell
+git clone https://github.com/LeonardoVilla/leonardodasilvavilla920524.git
+cd leonardodasilvavilla920524
+
+# Se preferir confirmar a pasta:
+dir
+```
+
+Linux/macOS:
+
+```bash
+git clone https://github.com/LeonardoVilla/leonardodasilvavilla920524.git
+cd leonardodasilvavilla920524
+
+# Se preferir confirmar a pasta:
+ls
+```
+
 ### Passo a passo para executar o projeto com Docker
 
 ```bash
