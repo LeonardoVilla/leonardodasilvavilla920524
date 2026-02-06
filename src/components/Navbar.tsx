@@ -12,6 +12,7 @@ export function Navbar() {
     const pathname = usePathname();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const updateAuth = () => setIsLoggedIn(Boolean(storage.getToken()));
@@ -115,63 +116,33 @@ export function Navbar() {
                         </nav>
                     )}
 
-                    {/* Mobile Menu Button */}
-                    <div className="md:hidden">
-                        <details className="dropdown">
-                            <summary className="btn btn-ghost">
-                                ☰
-                            </summary>
-                            <ul className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-56">
-                                {isLoggedIn && (
-                                    <>
-                                        <li>
-                                            <Link href="/" className="flex items-center gap-2">
-                                                <Image
-                                                    src="/icone-de-cao-e-gato-menu.png"
-                                                    alt="Pets"
-                                                    width={20}
-                                                    height={20}
-                                                    className="h-5 w-5"
-                                                />
-                                                Pets
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link href="/tutores" className="flex items-center gap-2">
-                                                <Image
-                                                    src="/icone-de-tutor-menu.png"
-                                                    alt="Tutores"
-                                                    width={20}
-                                                    height={20}
-                                                    className="h-5 w-5"
-                                                />
-                                                Tutores
-                                            </Link>
-                                        </li>
-                                    </>
-                                )}
-                                <li className="mt-1">
-                                    {isLoggedIn ? (
-                                        <button
-                                            onClick={handleLogout}
-                                            className="flex w-full items-center justify-center gap-2 text-red-600"
-                                        >
-                                            Sair
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={() => setIsModalOpen(true)}
-                                            className="flex w-full items-center justify-center gap-2 text-gray-800"
-                                        >
-                                            Entrar
-                                        </button>
-                                    )}
-                                </li>
-                            </ul>
-                        </details>
-                    </div>
-
                     <div className="flex items-center gap-3">
+                        {/* Mobile Menu Button */}
+                        <button
+                            type="button"
+                            onClick={() => setIsMobileMenuOpen((open) => !open)}
+                            className="inline-flex items-center justify-center rounded-lg p-2 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#2FA5A4] md:hidden"
+                            aria-controls="navbar-default"
+                            aria-expanded={isMobileMenuOpen}
+                        >
+                            <span className="sr-only">Abrir menu</span>
+                            <svg
+                                className="h-6 w-6"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeWidth="2"
+                                    d="M5 7h14M5 12h14M5 17h14"
+                                />
+                            </svg>
+                        </button>
                         {!isLoggedIn ? (
                             <button
                                 onClick={() => setIsModalOpen(true)}
@@ -196,6 +167,82 @@ export function Navbar() {
                             </button>
                         )}
                     </div>
+                </div>
+                <div
+                    id="navbar-default"
+                    className={`${isMobileMenuOpen ? "block" : "hidden"} w-full md:hidden`}
+                >
+                    <ul className="mt-3 flex flex-col gap-1 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm font-medium">
+                        {isLoggedIn && (
+                            <>
+                                <li>
+                                    <Link
+                                        href="/"
+                                        className={`block rounded-lg px-3 py-2 transition ${isActive("/")
+                                            ? "bg-[#2FA5A4] text-white"
+                                            : "text-gray-700 hover:bg-gray-100"
+                                            }`}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                        <span className="inline-flex items-center gap-2">
+                                            <Image
+                                                src="/icone-de-cao-e-gato-menu.png"
+                                                alt="Pets"
+                                                width={20}
+                                                height={20}
+                                                className="h-5 w-5"
+                                            />
+                                            Pets
+                                        </span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="/tutores"
+                                        className={`block rounded-lg px-3 py-2 transition ${isActive("/tutores")
+                                            ? "bg-[#2FA5A4] text-white"
+                                            : "text-gray-700 hover:bg-gray-100"
+                                            }`}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                        <span className="inline-flex items-center gap-2">
+                                            <Image
+                                                src="/icone-de-tutor-menu.png"
+                                                alt="Tutores"
+                                                width={20}
+                                                height={20}
+                                                className="h-5 w-5"
+                                            />
+                                            Tutores
+                                        </span>
+                                    </Link>
+                                </li>
+                            </>
+                        )}
+                        <li>
+                            {isLoggedIn ? (
+                                <button
+                                    onClick={() => {
+                                        handleLogout();
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-red-600 transition hover:bg-red-50"
+                                >
+                                    Sair
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => {
+                                        setIsModalOpen(true);
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-800 transition hover:bg-gray-100"
+                                >
+                                    Entrar
+                                </button>
+                            )}
+                        </li>
+                    </ul>
                 </div>
             </div>
         </header>
