@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { PetResponseDto } from "@/types/api";
@@ -25,6 +25,8 @@ export function PetsCarousel({
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+  const touchDeltaX = useRef(0);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 767px)");
@@ -42,6 +44,40 @@ export function PetsCarousel({
   }, []);
 
   const effectivePageSize = isMobile ? 1 : pageSize;
+
+  const goToPrev = () => {
+    setCarouselIndex((prev) => Math.max(0, prev - 1));
+  };
+
+  const goToNext = () => {
+    setCarouselIndex((prev) => Math.min(totalPages - 1, prev + 1));
+  };
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobile) return;
+    touchStartX.current = event.touches[0]?.clientX ?? null;
+    touchDeltaX.current = 0;
+  };
+
+  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobile || touchStartX.current === null) return;
+    const currentX = event.touches[0]?.clientX ?? touchStartX.current;
+    touchDeltaX.current = currentX - touchStartX.current;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isMobile || touchStartX.current === null) return;
+    const swipeThreshold = 50;
+
+    if (touchDeltaX.current > swipeThreshold) {
+      goToPrev();
+    } else if (touchDeltaX.current < -swipeThreshold) {
+      goToNext();
+    }
+
+    touchStartX.current = null;
+    touchDeltaX.current = 0;
+  };
 
   const totalPages = useMemo(
     () => Math.max(1, Math.ceil(pets.length / effectivePageSize)),
@@ -87,19 +123,17 @@ export function PetsCarousel({
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setCarouselIndex((prev) => Math.max(0, prev - 1))}
+              onClick={goToPrev}
               disabled={carouselIndex === 0}
-              className="h-11 w-11 rounded-full border border-white/30 bg-white/10 text-white transition hover:bg-white/20 disabled:opacity-40"
+              className="hidden h-11 w-11 rounded-full border border-white/30 bg-white/10 text-white transition hover:bg-white/20 disabled:opacity-40 md:inline-flex md:items-center md:justify-center"
               aria-label="Ver pets anteriores"
             >
               ←
             </button>
             <button
-              onClick={() =>
-                setCarouselIndex((prev) => Math.min(totalPages - 1, prev + 1))
-              }
+              onClick={goToNext}
               disabled={carouselIndex >= totalPages - 1}
-              className="h-11 w-11 rounded-full border border-white/30 bg-white/10 text-white transition hover:bg-white/20 disabled:opacity-40"
+              className="hidden h-11 w-11 rounded-full border border-white/30 bg-white/10 text-white transition hover:bg-white/20 disabled:opacity-40 md:inline-flex md:items-center md:justify-center"
               aria-label="Ver proximos pets"
             >
               →
@@ -111,6 +145,9 @@ export function PetsCarousel({
           className={`mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 transition-all duration-500 ease-out ${
             isTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"
           }`}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {pets
             .slice(
